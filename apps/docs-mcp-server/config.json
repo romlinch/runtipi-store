@@ -1,0 +1,55 @@
+{
+  "name": "Docs MCP Server",
+  "id": "docs-mcp-server",
+  "available": true,
+  "short_desc": "AI documentation assistant that provides up-to-date docs for coding assistants.",
+  "author": "arabold",
+  "port": 6280,
+  "categories": [
+    "development",
+    "utilities"
+  ],
+  "description": "Docs MCP Server enhances AI coding assistants by providing accurate, version-specific documentation through indexing and searching various sources including websites, GitHub, npm, PyPI, and local files.",
+  "tipi_version": 2,
+  "version": "v1.23.0",
+  "source": "https://github.com/arabold/docs-mcp-server",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1736079600000,
+  "updated_at": 1736079600000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "OpenAI API Key",
+      "hint": "API key for embeddings (use 'ollama' for local Ollama)",
+      "default": "ollama",
+      "required": true,
+      "env_variable": "OPENAI_API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "OpenAI API Base",
+      "hint": "API base URL (for Ollama use http://localhost:11434/v1)",
+      "default": "http://localhost:11434/v1",
+      "env_variable": "OPENAI_API_BASE"
+    },
+    {
+      "type": "text",
+      "label": "Embedding Model",
+      "hint": "Embedding model to use (nomic-embed-text for Ollama)",
+      "default": "nomic-embed-text",
+      "env_variable": "DOCS_MCP_EMBEDDING_MODEL"
+    },
+    {
+      "type": "number",
+      "label": "Port",
+      "hint": "Port for the web interface (default: 6280)",
+      "default": 6280,
+      "env_variable": "PORT"
+    }
+  ]
+}
