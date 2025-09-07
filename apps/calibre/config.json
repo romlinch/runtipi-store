@@ -11,7 +11,7 @@
   ],
   "description": "Calibre is a powerful e-book library management application that organizes existing e-books into virtual libraries, displays, edits, creates and converts e-books, as well as sync with a variety of e-readers.",
   "tipi_version": 2,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "source": "https://calibre-ebook.com/",
   "exposable": true,
   "supported_architectures": [
