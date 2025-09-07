@@ -6,7 +6,7 @@
       "isMain": true,
       "internalPort": "5000",
       "privileged": true,
-      "shmSize": "256mb",
+      "shmSize": "${SHM_SIZE}",
       "addPorts": [
         {
           "containerPort": "8971",
@@ -44,7 +44,7 @@
           "containerPath": "/config"
         },
         {
-          "hostPath": "${APP_DATA_DIR}/media",
+          "hostPath": "${MEDIA_FOLDER}",
           "containerPath": "/media"
         }
       ],
