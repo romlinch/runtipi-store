@@ -1,0 +1,81 @@
+{
+  "name": "Samba File Server",
+  "id": "samba",
+  "available": true,
+  "short_desc": "SMB/CIFS file server for network file sharing",
+  "author": "ServerContainers",
+  "port": 445,
+  "categories": [
+    "network",
+    "utilities"
+  ],
+  "description": "Samba is a free software re-implementation of the SMB networking protocol. It provides file and print services for various client types including Windows, Linux, and macOS systems.",
+  "tipi_version": 2,
+  "version": "1.0.0",
+  "source": "https://github.com/ServerContainers/samba",
+  "exposable": false,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1736090500000,
+  "updated_at": 1736090500000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Server Model",
+      "hint": "Samba server model (e.g., TimeCapsule, RaspberryPi)",
+      "default": "TimeCapsule",
+      "required": false,
+      "env_variable": "MODEL"
+    },
+    {
+      "type": "text",
+      "label": "Avahi Name",
+      "hint": "Network discovery name for the server",
+      "default": "StorageServer",
+      "required": false,
+      "env_variable": "AVAHI_NAME"
+    },
+    {
+      "type": "number",
+      "label": "Log Level",
+      "hint": "Samba log level (0-10)",
+      "default": 3,
+      "required": false,
+      "env_variable": "SAMBA_CONF_LOG_LEVEL"
+    },
+    {
+      "type": "number",
+      "label": "Users Group ID",
+      "hint": "Group ID for users group",
+      "default": 1000,
+      "required": true,
+      "env_variable": "GROUP_users"
+    },
+    {
+      "type": "text",
+      "label": "Primary User Account",
+      "hint": "Username for primary account",
+      "default": "admin",
+      "required": true,
+      "env_variable": "PRIMARY_USER"
+    },
+    {
+      "type": "password",
+      "label": "Primary User Password",
+      "hint": "Password for primary account",
+      "required": true,
+      "env_variable": "PRIMARY_PASSWORD"
+    },
+    {
+      "type": "number",
+      "label": "Primary User ID",
+      "hint": "User ID for primary account",
+      "default": 1000,
+      "required": true,
+      "env_variable": "PRIMARY_UID"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "services": [
+    {
+      "name": "samba",
+      "image": "ghcr.io/servercontainers/samba",
+      "isMain": true,
+      "networkMode": "host",
+      "environment": {
+        "MODEL": "${MODEL}",
+        "AVAHI_NAME": "${AVAHI_NAME}",
+        "SAMBA_CONF_LOG_LEVEL": "${SAMBA_CONF_LOG_LEVEL}",
+        "WSDD2_DISABLE": "1",
+        "AVAHI_DISABLE": "1",
+        "GROUP_users": "${GROUP_users}",
+        "ACCOUNT_${PRIMARY_USER}": "${PRIMARY_PASSWORD}",
+        "UID_${PRIMARY_USER}": "${PRIMARY_UID}",
+        "GROUPS_${PRIMARY_USER}": "users",
+        "SAMBA_VOLUME_CONFIG_media": "[Media]; path=/media; valid users = ${PRIMARY_USER}; guest ok = no; read only = no; browseable = yes"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/media",
+          "containerPath": "/media"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/shares",
+          "containerPath": "/shares"
+        }
+      ]
+    }
+  ]
+}
