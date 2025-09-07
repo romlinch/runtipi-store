@@ -1,0 +1,39 @@
+{
+  "services": [
+    {
+      "name": "calibre",
+      "image": "quay.io/linuxserver.io/calibre:8.7.0",
+      "isMain": true,
+      "internalPort": "8080",
+      "addPorts": [
+        {
+          "containerPort": "8181",
+          "hostPort": "8181"
+        },
+        {
+          "containerPort": "8081",
+          "hostPort": "8081"
+        },
+        {
+          "containerPort": "8100",
+          "hostPort": "8100"
+        }
+      ],
+      "environment": {
+        "PUID": "${PUID}",
+        "PGID": "${PGID}",
+        "TZ": "${TZ}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/config",
+          "containerPath": "/config"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/books",
+          "containerPath": "/media/data"
+        }
+      ]
+    }
+  ]
+}

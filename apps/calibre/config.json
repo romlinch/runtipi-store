@@ -1,0 +1,66 @@
+{
+  "name": "Calibre",
+  "id": "calibre",
+  "available": true,
+  "short_desc": "E-book library management and conversion tool",
+  "author": "LinuxServer.io",
+  "port": 8080,
+  "categories": [
+    "media",
+    "books"
+  ],
+  "description": "Calibre is a powerful e-book library management application that organizes existing e-books into virtual libraries, displays, edits, creates and converts e-books, as well as sync with a variety of e-readers.",
+  "tipi_version": 2,
+  "version": "8.7.0",
+  "source": "https://calibre-ebook.com/",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1736090600000,
+  "updated_at": 1736090600000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "number",
+      "label": "User ID (PUID)",
+      "hint": "User ID for file permissions",
+      "default": 1000,
+      "required": true,
+      "env_variable": "PUID"
+    },
+    {
+      "type": "number",
+      "label": "Group ID (PGID)",
+      "hint": "Group ID for file permissions",
+      "default": 1000,
+      "required": true,
+      "env_variable": "PGID"
+    },
+    {
+      "type": "text",
+      "label": "Timezone",
+      "hint": "Timezone (e.g., Europe/Paris, America/New_York)",
+      "default": "Etc/UTC",
+      "required": true,
+      "env_variable": "TZ"
+    },
+    {
+      "type": "number",
+      "label": "Web Interface Port",
+      "hint": "Port for Calibre web interface",
+      "default": 8080,
+      "required": false,
+      "env_variable": "WEB_PORT"
+    },
+    {
+      "type": "number",
+      "label": "Desktop GUI Port",
+      "hint": "Port for Calibre desktop GUI (noVNC)",
+      "default": 8181,
+      "required": false,
+      "env_variable": "DESKTOP_PORT"
+    }
+  ]
+}
