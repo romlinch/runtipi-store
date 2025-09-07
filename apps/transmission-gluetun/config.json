@@ -1,0 +1,118 @@
+{
+  "name": "Transmission + Gluetun VPN",
+  "id": "transmission-gluetun",
+  "available": true,
+  "short_desc": "Transmission BitTorrent client protected by Gluetun VPN tunnel",
+  "author": "runtipi",
+  "port": 9091,
+  "categories": [
+    "media",
+    "network"
+  ],
+  "description": "Transmission is a fast, easy, and free BitTorrent client combined with Gluetun VPN client for secure torrenting. All traffic is routed through the VPN connection ensuring privacy and security.",
+  "tipi_version": 2,
+  "version": "latest",
+  "source": "https://github.com/transmission/transmission",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1736089200000,
+  "updated_at": 1736089200000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "VPN Service Provider",
+      "hint": "VPN provider (e.g., airvpn, nordvpn, surfshark, etc.)",
+      "default": "airvpn",
+      "required": true,
+      "env_variable": "VPN_SERVICE_PROVIDER"
+    },
+    {
+      "type": "text",
+      "label": "VPN Type",
+      "hint": "VPN protocol type (wireguard or openvpn)",
+      "default": "wireguard",
+      "required": true,
+      "env_variable": "VPN_TYPE"
+    },
+    {
+      "type": "password",
+      "label": "WireGuard Private Key",
+      "hint": "Your WireGuard private key from VPN provider",
+      "required": false,
+      "env_variable": "WIREGUARD_PRIVATE_KEY"
+    },
+    {
+      "type": "password",
+      "label": "WireGuard Preshared Key",
+      "hint": "Your WireGuard preshared key (optional)",
+      "required": false,
+      "env_variable": "WIREGUARD_PRESHARED_KEY"
+    },
+    {
+      "type": "text",
+      "label": "WireGuard Addresses",
+      "hint": "Your assigned WireGuard IP address (e.g., 10.132.5.205/32)",
+      "required": false,
+      "env_variable": "WIREGUARD_ADDRESSES"
+    },
+    {
+      "type": "text",
+      "label": "Server Countries",
+      "hint": "Comma-separated list of server countries (e.g., Netherlands,Germany)",
+      "default": "Netherlands",
+      "required": false,
+      "env_variable": "SERVER_COUNTRIES"
+    },
+    {
+      "type": "text",
+      "label": "Firewall VPN Input Ports",
+      "hint": "Comma-separated list of ports for VPN input (e.g., 26237,51413)",
+      "default": "26237",
+      "required": false,
+      "env_variable": "FIREWALL_VPN_INPUT_PORTS"
+    },
+    {
+      "type": "text",
+      "label": "Transmission Username",
+      "hint": "Username for Transmission web interface",
+      "default": "admin",
+      "required": true,
+      "env_variable": "TRANSMISSION_USER"
+    },
+    {
+      "type": "password",
+      "label": "Transmission Password",
+      "hint": "Password for Transmission web interface",
+      "required": true,
+      "env_variable": "TRANSMISSION_PASS"
+    },
+    {
+      "type": "text",
+      "label": "Timezone",
+      "hint": "Timezone (e.g., Europe/Paris, America/New_York)",
+      "default": "Europe/Paris",
+      "required": true,
+      "env_variable": "TZ"
+    },
+    {
+      "type": "number",
+      "label": "User ID (PUID)",
+      "hint": "User ID for file permissions",
+      "default": 1000,
+      "required": true,
+      "env_variable": "PUID"
+    },
+    {
+      "type": "number",
+      "label": "Group ID (PGID)",
+      "hint": "Group ID for file permissions",
+      "default": 1000,
+      "required": true,
+      "env_variable": "PGID"
+    }
+  ]
+}

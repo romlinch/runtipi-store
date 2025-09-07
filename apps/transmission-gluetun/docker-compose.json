@@ -1,0 +1,61 @@
+{
+  "services": [
+    {
+      "name": "gluetun",
+      "image": "qmcgaw/gluetun:v3.40.0",
+      "isMain": true,
+      "internalPort": "9091",
+      "addPorts": [
+        {
+          "containerPort": "26237",
+          "hostPort": "26237"
+        }
+      ],
+      "privileged": true,
+      "capAdd": ["NET_ADMIN"],
+      "environment": {
+        "VPN_SERVICE_PROVIDER": "${VPN_SERVICE_PROVIDER}",
+        "VPN_TYPE": "${VPN_TYPE}",
+        "WIREGUARD_PRIVATE_KEY": "${WIREGUARD_PRIVATE_KEY}",
+        "WIREGUARD_PRESHARED_KEY": "${WIREGUARD_PRESHARED_KEY}",
+        "WIREGUARD_ADDRESSES": "${WIREGUARD_ADDRESSES}",
+        "FIREWALL_VPN_INPUT_PORTS": "${FIREWALL_VPN_INPUT_PORTS}",
+        "SERVER_COUNTRIES": "${SERVER_COUNTRIES}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/gluetun",
+          "containerPath": "/gluetun"
+        }
+      ]
+    },
+    {
+      "name": "transmission",
+      "image": "lscr.io/linuxserver/transmission:4.0.6",
+      "networkMode": "service:gluetun",
+      "dependsOn": ["gluetun"],
+      "environment": {
+        "PUID": "${PUID}",
+        "PGID": "${PGID}",
+        "TZ": "${TZ}",
+        "TRANSMISSION_WEB_HOME": "/config/flood-for-transmission/",
+        "USER": "${TRANSMISSION_USER}",
+        "PASS": "${TRANSMISSION_PASS}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/transmission/config",
+          "containerPath": "/config"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/transmission/downloads",
+          "containerPath": "/downloads"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/transmission/watch",
+          "containerPath": "/watch"
+        }
+      ]
+    }
+  ]
+}
