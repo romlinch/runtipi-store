@@ -1,0 +1,10 @@
+{
+  "services": [
+    {
+      "name": "omni-tools",
+      "image": "iib0011/omni-tools:0.5.0",
+      "isMain": true,
+      "internalPort": "80"
+    }
+  ]
+}
