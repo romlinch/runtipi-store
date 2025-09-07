@@ -48,8 +48,8 @@
           "containerPath": "/config"
         },
         {
-          "hostPath": "${APP_DATA_DIR}/transmission/downloads",
-          "containerPath": "/downloads"
+          "hostPath": "/srv/data/torrents",
+          "containerPath": "/media/torrents"
         },
         {
           "hostPath": "${APP_DATA_DIR}/transmission/watch",
