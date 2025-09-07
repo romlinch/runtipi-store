@@ -1,0 +1,65 @@
+{
+  "name": "Frigate NVR",
+  "id": "frigate",
+  "available": true,
+  "short_desc": "AI-powered network video recorder with object detection",
+  "author": "Blake Blackshear",
+  "port": 5000,
+  "categories": [
+    "security",
+    "media"
+  ],
+  "description": "Frigate is an open source NVR built around real-time AI object detection. It uses OpenCV and Tensorflow to perform real-time object detection locally on live camera feeds.",
+  "tipi_version": 2,
+  "version": "0.16.1",
+  "source": "https://github.com/blakeblackshear/frigate",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1736090700000,
+  "updated_at": 1736090700000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "RTSP Password",
+      "hint": "Password for RTSP camera feeds authentication",
+      "required": false,
+      "env_variable": "FRIGATE_RTSP_PASSWORD"
+    },
+    {
+      "type": "text",
+      "label": "Shared Memory Size",
+      "hint": "Shared memory size (e.g., 256mb, 512mb)",
+      "default": "256mb",
+      "required": false,
+      "env_variable": "SHM_SIZE"
+    },
+    {
+      "type": "number",
+      "label": "Web UI Port",
+      "hint": "Port for Frigate web interface",
+      "default": 5000,
+      "required": false,
+      "env_variable": "WEB_PORT"
+    },
+    {
+      "type": "number",
+      "label": "RTSP Port",
+      "hint": "Port for RTSP feeds",
+      "default": 8554,
+      "required": false,
+      "env_variable": "RTSP_PORT"
+    },
+    {
+      "type": "number",
+      "label": "WebRTC TCP Port",
+      "hint": "WebRTC over TCP port",
+      "default": 8555,
+      "required": false,
+      "env_variable": "WEBRTC_TCP_PORT"
+    }
+  ]
+}

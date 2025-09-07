@@ -1,0 +1,59 @@
+{
+  "services": [
+    {
+      "name": "frigate",
+      "image": "ghcr.io/blakeblackshear/frigate:0.16.1",
+      "isMain": true,
+      "internalPort": "5000",
+      "privileged": true,
+      "shmSize": "256mb",
+      "addPorts": [
+        {
+          "containerPort": "8971",
+          "hostPort": "8971"
+        },
+        {
+          "containerPort": "8554",
+          "hostPort": "8554"
+        },
+        {
+          "containerPort": "8555",
+          "hostPort": "8555",
+          "protocol": "tcp"
+        },
+        {
+          "containerPort": "8555",
+          "hostPort": "8555",
+          "protocol": "udp"
+        }
+      ],
+      "devices": [
+        "/dev/bus/usb:/dev/bus/usb"
+      ],
+      "environment": {
+        "FRIGATE_RTSP_PASSWORD": "${FRIGATE_RTSP_PASSWORD}"
+      },
+      "volumes": [
+        {
+          "hostPath": "/etc/localtime",
+          "containerPath": "/etc/localtime",
+          "readOnly": true
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/config",
+          "containerPath": "/config"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/media",
+          "containerPath": "/media"
+        }
+      ],
+      "tmpfs": [
+        {
+          "target": "/tmp/cache",
+          "size": "1000000000"
+        }
+      ]
+    }
+  ]
+}
