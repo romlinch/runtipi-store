@@ -30,7 +30,7 @@
           "containerPath": "/config"
         },
         {
-          "hostPath": "${APP_DATA_DIR}/books",
+          "hostPath": "${ROOT_FOLDER_HOST}/media/data/books",
           "containerPath": "/media/data"
         }
       ]
