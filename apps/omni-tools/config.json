@@ -4,14 +4,14 @@
   "available": true,
   "short_desc": "A collection of useful web-based tools and utilities",
   "author": "iib0011",
-  "port": 80,
+  "port": 8080,
   "categories": [
     "utilities",
     "development"
   ],
   "description": "Omni Tools provides a comprehensive collection of web-based utilities and tools for various tasks including text processing, file conversion, development utilities, and more.",
   "tipi_version": 2,
-  "version": "0.5.0",
+  "version": "0.5.1",
   "source": "https://github.com/iib0011/omni-tools",
   "exposable": true,
   "supported_architectures": [
