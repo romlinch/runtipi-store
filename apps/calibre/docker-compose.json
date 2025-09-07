@@ -8,11 +8,7 @@
       "addPorts": [
         {
           "containerPort": "8181",
-          "hostPort": "8181"
-        },
-        {
-          "containerPort": "8081",
-          "hostPort": "8081"
+          "hostPort": "${DESKTOP_PORT}"
         },
         {
           "containerPort": "8100",
