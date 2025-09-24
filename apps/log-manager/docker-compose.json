@@ -1,0 +1,97 @@
+{
+  "services": [
+    {
+      "name": "opensearch",
+      "image": "opensearchproject/opensearch:2.11.1",
+      "environment": {
+        "cluster.name": "opensearch-cluster",
+        "node.name": "opensearch",
+        "discovery.seed_hosts": "opensearch",
+        "cluster.initial_cluster_manager_nodes": "opensearch",
+        "bootstrap.memory_lock": "true",
+        "OPENSEARCH_JAVA_OPTS": "${OPENSEARCH_JAVA_OPTS}",
+        "DISABLE_INSTALL_DEMO_CONFIG": "${DISABLE_INSTALL_DEMO_CONFIG}",
+        "DISABLE_SECURITY_PLUGIN": "${DISABLE_SECURITY_PLUGIN}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/opensearch-data",
+          "containerPath": "/usr/share/opensearch/data"
+        }
+      ],
+      "addPorts": [
+        {
+          "containerPort": "9200",
+          "hostPort": "9200"
+        },
+        {
+          "containerPort": "9600",
+          "hostPort": "9600"
+        }
+      ],
+      "ulimits": {
+        "memlock": {
+          "soft": -1,
+          "hard": -1
+        },
+        "nofile": {
+          "soft": 65536,
+          "hard": 65536
+        }
+      }
+    },
+    {
+      "name": "opensearch-dashboards",
+      "image": "opensearchproject/opensearch-dashboards:2.11.1",
+      "isMain": true,
+      "internalPort": "5601",
+      "environment": {
+        "OPENSEARCH_HOSTS": "[\"http://opensearch:9200\"]",
+        "DISABLE_SECURITY_DASHBOARDS_PLUGIN": "${DISABLE_SECURITY_PLUGIN}"
+      },
+      "dependsOn": [
+        "opensearch"
+      ]
+    },
+    {
+      "name": "fluent-bit",
+      "image": "fluent/fluent-bit:2.2.0",
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/fluent-bit.conf",
+          "containerPath": "/fluent-bit/etc/fluent-bit.conf",
+          "readOnly": true
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/parsers.conf",
+          "containerPath": "/fluent-bit/etc/parsers.conf",
+          "readOnly": true
+        },
+        {
+          "hostPath": "/var/log",
+          "containerPath": "/var/log",
+          "readOnly": true
+        }
+      ],
+      "addPorts": [
+        {
+          "containerPort": "24224",
+          "hostPort": "24224"
+        },
+        {
+          "containerPort": "5140",
+          "hostPort": "5140",
+          "protocol": "udp"
+        },
+        {
+          "containerPort": "12201",
+          "hostPort": "12201",
+          "protocol": "udp"
+        }
+      ],
+      "dependsOn": [
+        "opensearch"
+      ]
+    }
+  ]
+}

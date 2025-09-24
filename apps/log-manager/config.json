@@ -1,0 +1,50 @@
+{
+  "name": "Log Manager",
+  "id": "log-manager",
+  "available": true,
+  "short_desc": "Centralized log management with OpenSearch and Fluent Bit",
+  "author": "OpenSearch Project",
+  "port": 5601,
+  "categories": [
+    "utilities",
+    "data"
+  ],
+  "description": "A comprehensive log management solution featuring OpenSearch for search and analytics, OpenSearch Dashboards for visualization, and Fluent Bit for log collection and forwarding. Perfect for centralizing logs from multiple sources including Docker containers, system logs, and network devices.",
+  "tipi_version": 1,
+  "version": "1.0.0",
+  "source": "https://opensearch.org/",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1736090600000,
+  "updated_at": 1736090600000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "OpenSearch Java Options",
+      "hint": "Memory settings for OpenSearch (e.g., -Xms1g -Xmx1g)",
+      "default": "-Xms1g -Xmx1g",
+      "required": true,
+      "env_variable": "OPENSEARCH_JAVA_OPTS"
+    },
+    {
+      "type": "boolean",
+      "label": "Disable Security Plugin",
+      "hint": "Disable OpenSearch security plugin for simplified setup (not recommended for production)",
+      "default": true,
+      "required": false,
+      "env_variable": "DISABLE_SECURITY_PLUGIN"
+    },
+    {
+      "type": "boolean",
+      "label": "Disable Demo Config",
+      "hint": "Disable OpenSearch demo configuration",
+      "default": true,
+      "required": false,
+      "env_variable": "DISABLE_INSTALL_DEMO_CONFIG"
+    }
+  ]
+}
