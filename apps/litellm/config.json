@@ -1,0 +1,65 @@
+{
+  "name": "Litellm",
+  "id": "litellm",
+  "available": true,
+  "short_desc": "LLM proxy server with multi-model support and unified API",
+  "author": "BerriAI",
+  "port": 4000,
+  "categories": [
+    "development",
+    "ai"
+  ],
+  "description": "Litellm is a unified interface to access various LLM APIs. It provides a simple proxy server that allows you to interact with different language models (OpenRouter, OpenAI, etc.) through a single standardized API endpoint.",
+  "tipi_version": 1,
+  "version": "1.0.0",
+  "source": "https://github.com/BerriAI/litellm",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1728864000000,
+  "updated_at": 1728864000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Master API Key",
+      "hint": "Master key for authenticating requests to the proxy (e.g., sk-1234)",
+      "default": "sk-1234",
+      "required": true,
+      "env_variable": "LITELLM_MASTER_KEY"
+    },
+    {
+      "type": "number",
+      "label": "Worker Threads",
+      "hint": "Number of worker threads for the proxy server",
+      "default": 8,
+      "required": true,
+      "env_variable": "NUM_WORKERS"
+    },
+    {
+      "type": "text",
+      "label": "PostgreSQL User",
+      "hint": "Username",
+      "default": "litellm",
+      "required": true,
+      "env_variable": "DATABASE_USER"
+    },
+    {
+      "type": "text",
+      "label": "PostgreSQL Password",
+      "hint": "Password",
+      "required": true,
+      "env_variable": "DATABASE_PASSWORD"
+    },
+    {
+      "type": "boolean",
+      "label": "Store Models in Database",
+      "hint": "Enable persistent storage of model configurations in the database",
+      "default": true,
+      "required": false,
+      "env_variable": "STORE_MODEL_IN_DB"
+    }
+  ]
+}

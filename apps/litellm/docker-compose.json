@@ -1,0 +1,47 @@
+{
+  "services": [
+    {
+      "name": "postgres",
+      "image": "postgres:16-alpine",
+      "environment": {
+        "POSTGRES_DB": "litellm",
+        "POSTGRES_USER": "${DATABASE_USER}",
+        "POSTGRES_PASSWORD": "${DATABASE_PASSWORD}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/postgres-data",
+          "containerPath": "/var/lib/postgresql/data"
+        }
+      ]
+    },
+    {
+      "name": "litellm",
+      "image": "ghcr.io/berriai/litellm-database:main-stable",
+      "isMain": true,
+      "internalPort": "4000",
+      "environment": {
+        "LITELLM_MASTER_KEY": "${LITELLM_MASTER_KEY}",
+        "STORE_MODEL_IN_DB": "${STORE_MODEL_IN_DB}",
+        "DATABASE_URL": "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/litellm"
+      },
+      "addPorts": [
+        {
+          "containerPort": "4000",
+          "hostPort": "4000"
+        }
+      ],
+      "dependsOn": [
+        "postgres"
+      ],
+      "command": [
+        "--config",
+        "/app/config.yaml",
+        "--port",
+        "4000",
+        "--num_workers",
+        "${NUM_WORKERS:-8}"
+      ]
+    }
+  ]
+}
