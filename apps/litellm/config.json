@@ -10,7 +10,7 @@
     "ai"
   ],
   "description": "Litellm is a unified interface to access various LLM APIs. It provides a simple proxy server that allows you to interact with different language models (OpenRouter, OpenAI, etc.) through a single standardized API endpoint.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "1.0.0",
   "source": "https://github.com/BerriAI/litellm",
   "exposable": true,
