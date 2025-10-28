@@ -23,6 +23,7 @@
       "environment": {
         "LITELLM_MASTER_KEY": "${LITELLM_MASTER_KEY}",
         "STORE_MODEL_IN_DB": "${STORE_MODEL_IN_DB}",
+        "STORE_PROMPTS_IN_SPEND_LOGS": "${STORE_PROMPTS_IN_SPEND_LOGS}",
         "DATABASE_URL": "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/litellm"
       },
       "addPorts": [
