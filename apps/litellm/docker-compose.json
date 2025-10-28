@@ -25,12 +25,6 @@
         "STORE_MODEL_IN_DB": "${STORE_MODEL_IN_DB}",
         "DATABASE_URL": "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/litellm"
       },
-      "volumes": [
-        {
-          "hostPath": "${APP_DATA_DIR}/config.yaml",
-          "containerPath": "/app/config.yaml"
-        }
-      ],
       "addPorts": [
         {
           "containerPort": "4000",
@@ -41,8 +35,6 @@
         "postgres"
       ],
       "command": [
-        "--config",
-        "/app/config.yaml",
         "--port",
         "4000",
         "--num_workers",
