@@ -16,6 +16,17 @@
       ]
     },
     {
+      "name": "redis",
+      "image": "redis:7-alpine",
+      "command": ["redis-server", "--requirepass", "${REDIS_PASSWORD}"],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/redis-data",
+          "containerPath": "/data"
+        }
+      ]
+    },
+    {
       "name": "litellm",
       "image": "ghcr.io/berriai/litellm-database:main-stable",
       "isMain": true,
@@ -25,7 +36,10 @@
         "STORE_MODEL_IN_DB": "${STORE_MODEL_IN_DB}",
         "STORE_PROMPTS_IN_SPEND_LOGS": "${STORE_PROMPTS_IN_SPEND_LOGS}",
         "DATABASE_URL": "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/litellm",
-        "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY}"
+        "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY}",
+        "REDIS_HOST": "redis",
+        "REDIS_PORT": "6379",
+        "REDIS_PASSWORD": "${REDIS_PASSWORD}"
       },
       "volumes": [
         {
@@ -40,7 +54,8 @@
         }
       ],
       "dependsOn": [
-        "postgres"
+        "postgres",
+        "redis"
       ],
       "command": [
         "--config",
