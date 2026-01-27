@@ -1,0 +1,28 @@
+{
+  "services": [
+    {
+      "name": "jupyter",
+      "image": "quay.io/jupyter/datascience-notebook:latest",
+      "isMain": true,
+      "internalPort": "8888",
+      "environment": {
+        "JUPYTER_TOKEN": "${JUPYTER_TOKEN}",
+        "GRANT_SUDO": "${GRANT_SUDO}",
+        "NB_UID": "${NB_UID}",
+        "NB_GID": "${NB_GID}",
+        "CHOWN_HOME": "yes",
+        "CHOWN_HOME_OPTS": "-R"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/work",
+          "containerPath": "/home/jovyan/work"
+        }
+      ],
+      "command": [
+        "start-notebook.py",
+        "--ServerApp.root_dir=/home/jovyan/work"
+      ]
+    }
+  ]
+}

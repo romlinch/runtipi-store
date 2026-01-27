@@ -1,0 +1,57 @@
+{
+  "name": "Jupyter",
+  "id": "jupyter",
+  "available": true,
+  "short_desc": "Interactive computing environment for notebooks, code, and data",
+  "author": "Project Jupyter",
+  "port": 8888,
+  "categories": [
+    "development",
+    "data"
+  ],
+  "description": "JupyterLab is a web-based interactive development environment for notebooks, code, and data. It provides a flexible interface for data science, scientific computing, and machine learning with support for Python, R, and Julia.",
+  "tipi_version": 1,
+  "version": "latest",
+  "source": "https://jupyter.org",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1737936000000,
+  "updated_at": 1737936000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Jupyter Token",
+      "hint": "Token for authenticating to Jupyter (leave empty to disable authentication)",
+      "required": false,
+      "env_variable": "JUPYTER_TOKEN"
+    },
+    {
+      "type": "boolean",
+      "label": "Grant sudo access",
+      "hint": "Allow the jovyan user to run sudo commands inside the container",
+      "default": false,
+      "required": false,
+      "env_variable": "GRANT_SUDO"
+    },
+    {
+      "type": "number",
+      "label": "User ID (NB_UID)",
+      "hint": "User ID for file permissions",
+      "default": 1000,
+      "required": true,
+      "env_variable": "NB_UID"
+    },
+    {
+      "type": "number",
+      "label": "Group ID (NB_GID)",
+      "hint": "Group ID for file permissions",
+      "default": 100,
+      "required": true,
+      "env_variable": "NB_GID"
+    }
+  ]
+}
