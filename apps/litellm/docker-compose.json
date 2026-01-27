@@ -63,8 +63,7 @@
         "--port",
         "4000",
         "--num_workers",
-        "${NUM_WORKERS:-8}",
-        "--detailed_debug"
+        "${NUM_WORKERS:-8}"
       ]
     }
   ]
