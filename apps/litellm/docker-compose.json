@@ -43,7 +43,7 @@
       },
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/litellm-config.yaml",
+          "hostPath": "${APP_DATA_DIR}/config.yaml",
           "containerPath": "/app/config.yaml"
         }
       ],
