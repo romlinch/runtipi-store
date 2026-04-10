@@ -10,7 +10,7 @@
     "network"
   ],
   "description": "Transmission is a fast, easy, and free BitTorrent client combined with Gluetun VPN client for secure torrenting. All traffic is routed through the VPN connection ensuring privacy and security.",
-  "tipi_version": 2,
+  "tipi_version": 3,
   "version": "1.0.1",
   "source": "https://github.com/transmission/transmission",
   "exposable": true,
