@@ -1,0 +1,50 @@
+{
+  "name": "llama.cpp Router",
+  "id": "llama-cpp",
+  "available": true,
+  "short_desc": "Local LLM server (router mode) with multi-model hot-swap and idle unload",
+  "author": "ggml-org",
+  "port": 8085,
+  "categories": [
+    "ai",
+    "development"
+  ],
+  "description": "llama-server running in router mode with hot-swappable models and automatic unload after idle (--sleep-idle-seconds). Exposes an OpenAI-compatible API consumed by LiteLLM. Ships with presets for GLM-4.7-Flash (30B-A3B) and Gemma 4 26B-A4B — both MoE with expert offloading to RAM.",
+  "tipi_version": 1,
+  "version": "0.1.0",
+  "source": "https://github.com/ggml-org/llama.cpp",
+  "website": "https://github.com/ggml-org/llama.cpp",
+  "exposable": false,
+  "no_gui": true,
+  "supported_architectures": [
+    "amd64"
+  ],
+  "created_at": 1745251200000,
+  "updated_at": 1745251200000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Models directory (host path)",
+      "hint": "Absolute host path containing the GGUF files (e.g. /home/romain/models)",
+      "required": true,
+      "env_variable": "LLAMA_MODELS_DIR"
+    },
+    {
+      "type": "number",
+      "label": "Sleep idle seconds",
+      "hint": "Unload model after N seconds of inactivity (-1 disables)",
+      "default": 600,
+      "required": true,
+      "env_variable": "LLAMA_SLEEP_IDLE"
+    },
+    {
+      "type": "number",
+      "label": "Max loaded models",
+      "hint": "Max models held simultaneously. Keep at 1 unless you have lots of memory.",
+      "default": 1,
+      "required": true,
+      "env_variable": "LLAMA_MODELS_MAX"
+    }
+  ]
+}

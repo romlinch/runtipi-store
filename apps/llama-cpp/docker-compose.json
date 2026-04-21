@@ -1,0 +1,58 @@
+{
+  "services": [
+    {
+      "name": "llama-cpp",
+      "image": "ghcr.io/ggml-org/llama.cpp:server-cuda",
+      "isMain": true,
+      "internalPort": "8080",
+      "addToMainNetwork": true,
+      "environment": {
+        "LLAMA_LOG_VERBOSITY": "1",
+        "GGML_CUDA_ENABLE_UNIFIED_MEMORY": "1"
+      },
+      "volumes": [
+        {
+          "hostPath": "${LLAMA_MODELS_DIR}",
+          "containerPath": "/models",
+          "readOnly": true
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/config",
+          "containerPath": "/config",
+          "readOnly": true
+        }
+      ],
+      "addPorts": [
+        {
+          "containerPort": "8080",
+          "hostPort": "8085"
+        }
+      ],
+      "command": [
+        "--models-preset",
+        "/config/models-preset.ini",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8080",
+        "--sleep-idle-seconds",
+        "${LLAMA_SLEEP_IDLE}",
+        "--models-max",
+        "${LLAMA_MODELS_MAX}"
+      ],
+      "deploy": {
+        "resources": {
+          "reservations": {
+            "devices": [
+              {
+                "capabilities": ["gpu"],
+                "driver": "nvidia",
+                "count": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
