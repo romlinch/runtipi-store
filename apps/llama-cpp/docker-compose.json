@@ -20,6 +20,10 @@
           "hostPath": "${APP_DATA_DIR}/config",
           "containerPath": "/config",
           "readOnly": true
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/slot-cache",
+          "containerPath": "/slot-cache"
         }
       ],
       "addPorts": [
