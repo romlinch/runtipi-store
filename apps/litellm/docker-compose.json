@@ -18,7 +18,7 @@
     {
       "name": "redis",
       "image": "redis/redis-stack-server:latest",
-      "command": ["redis-server", "--requirepass", "${REDIS_PASSWORD}"],
+      "command": ["redis-server"],
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/redis-data",
@@ -38,8 +38,7 @@
         "DATABASE_URL": "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/litellm",
         "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY}",
         "REDIS_HOST": "redis",
-        "REDIS_PORT": "6379",
-        "REDIS_PASSWORD": "${REDIS_PASSWORD}"
+        "REDIS_PORT": "6379"
       },
       "volumes": [
         {
