@@ -48,6 +48,7 @@
         "--n-cpu-moe",
         "99",
         "--flash-attn",
+        "auto",
         "--cache-type-k",
         "q8_0",
         "--cache-type-v",
