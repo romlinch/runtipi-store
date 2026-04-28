@@ -10,8 +10,8 @@
     "ai"
   ],
   "description": "Litellm is a unified interface to access various LLM APIs. It provides a simple proxy server that allows you to interact with different language models (OpenRouter, OpenAI, etc.) through a single standardized API endpoint.",
-  "tipi_version": 11,
-  "version": "1.0.1",
+  "tipi_version": 12,
+  "version": "1.0.2",
   "source": "https://github.com/BerriAI/litellm",
   "exposable": true,
   "supported_architectures": [
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1728864000000,
-  "updated_at": 1777361206360,
+  "updated_at": 1777361373236,
   "dynamic_config": true,
   "form_fields": [
     {
@@ -75,6 +75,13 @@
       "hint": "API key for OpenRouter (optional, get yours at openrouter.ai)",
       "required": false,
       "env_variable": "OPENROUTER_API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Ollama API base URL",
+      "hint": "Ollama server URL for embeddings (e.g. Redis semantic cache). Example: http://192.168.1.99:11435",
+      "required": false,
+      "env_variable": "OLLAMA_API_BASE"
     }
   ]
 }

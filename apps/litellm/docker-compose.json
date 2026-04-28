@@ -37,6 +37,7 @@
         "STORE_PROMPTS_IN_SPEND_LOGS": "${STORE_PROMPTS_IN_SPEND_LOGS}",
         "DATABASE_URL": "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/litellm",
         "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY}",
+        "OLLAMA_API_BASE": "${OLLAMA_API_BASE}",
         "REDIS_HOST": "redis",
         "REDIS_PORT": "6379"
       },
