@@ -56,6 +56,12 @@
         "postgres",
         "redis"
       ],
+      "labels": {
+
+        "traefik.http.routers.litellm-custom.middlewares": "sse-no-buffer",
+        "traefik.http.middlewares.sse-no-buffer.headers.customResponseHeaders.X-Accel-Buffering": "no",
+        "traefik.http.middlewares.sse-no-buffer.headers.customResponseHeaders.Cache-Control": "no-cache"
+      },
       "command": [
         "--config",
         "/app/config.yaml",
