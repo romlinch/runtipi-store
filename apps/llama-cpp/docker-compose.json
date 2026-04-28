@@ -42,7 +42,9 @@
         "--sleep-idle-seconds",
         "${LLAMA_SLEEP_IDLE}",
         "--models-max",
-        "${LLAMA_MODELS_MAX}"
+        "${LLAMA_MODELS_MAX}",
+        "--slot-save-path",
+        "/slot-cache"
       ],
       "deploy": {
         "resources": {
