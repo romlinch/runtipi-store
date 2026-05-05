@@ -1,0 +1,24 @@
+{
+  "services": [
+    {
+      "name": "bichon",
+      "image": "rustmailer/bichon:latest",
+      "isMain": true,
+      "internalPort": "15630",
+      "user": "1000",
+      "environment": {
+        "PUID": "1000",
+        "PGID": "1000",
+        "BICHON_ROOT_DIR": "/data/root",
+        "BICHON_INDEX_DIR": "/data/envelope",
+        "BICHON_DATA_DIR": "/data/eml"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/data"
+        }
+      ]
+    }
+  ]
+}

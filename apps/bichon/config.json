@@ -1,0 +1,24 @@
+{
+  "name": "Bichon",
+  "id": "bichon",
+  "available": true,
+  "short_desc": "Lightweight high-performance Rust email archiver with WebUI",
+  "author": "rustmailer",
+  "port": 15630,
+  "categories": [
+    "utilities"
+  ],
+  "description": "Bichon is a self-hosted email archiver built in Rust. It synchronizes emails from IMAP servers, indexes them for full-text search, and exposes a REST API — all with no external database dependencies.",
+  "tipi_version": 1,
+  "version": "0.3.7",
+  "source": "https://github.com/rustmailer/bichon",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1746403200000,
+  "updated_at": 1746403200000,
+  "dynamic_config": true,
+  "form_fields": []
+}
