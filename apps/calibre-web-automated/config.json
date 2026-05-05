@@ -1,0 +1,41 @@
+{
+  "name": "Calibre-Web Automated",
+  "id": "calibre-web-automated",
+  "available": true,
+  "short_desc": "Calibre-Web with automation, conversion, and metadata enforcement",
+  "author": "crocodilestick",
+  "port": 8083,
+  "categories": [
+    "media",
+    "books"
+  ],
+  "description": "Calibre-Web Automated combines the Calibre-Web UI with Calibre's conversion engine and a suite of automations: automatic ingestion and format conversion, metadata enforcement, EPUB fixing, send-to-Kindle, KOReader sync, and Hardcover integration.",
+  "tipi_version": 1,
+  "version": "4.0.6",
+  "source": "https://github.com/crocodilestick/Calibre-Web-Automated",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1746403200000,
+  "updated_at": 1746403200000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Hardcover API Token",
+      "hint": "Your Hardcover.app API token for reading progress sync (optional)",
+      "required": false,
+      "env_variable": "HARDCOVER_TOKEN"
+    },
+    {
+      "type": "text",
+      "label": "Timezone",
+      "hint": "Timezone (e.g. Europe/Paris, America/New_York)",
+      "default": "Etc/UTC",
+      "required": true,
+      "env_variable": "TZ"
+    }
+  ]
+}
