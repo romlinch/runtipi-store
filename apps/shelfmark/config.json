@@ -1,0 +1,76 @@
+{
+  "name": "Shelfmark",
+  "id": "shelfmark",
+  "available": true,
+  "short_desc": "Self-hosted book and audiobook search & request hub",
+  "author": "calibrain",
+  "port": 8084,
+  "categories": [
+    "media",
+    "books"
+  ],
+  "description": "Shelfmark is a self-hosted web interface for searching and requesting books and audiobooks across multiple sources (web, torrent, usenet, IRC). It integrates with metadata providers (Hardcover, Open Library, Google Books) and library tools like Calibre, Calibre-Web, Calibre-Web-Automated, Grimmory, and Audiobookshelf. Multi-user support with built-in request system and approval workflows.",
+  "tipi_version": 1,
+  "version": "latest",
+  "source": "https://github.com/calibrain/shelfmark",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1746403200000,
+  "updated_at": 1746403200000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Timezone",
+      "hint": "Timezone (e.g. Europe/Paris, America/New_York)",
+      "default": "Etc/UTC",
+      "required": true,
+      "env_variable": "TZ"
+    },
+    {
+      "type": "text",
+      "label": "Search Mode",
+      "hint": "'universal' uses metadata providers (recommended), 'direct' queries configured sources directly",
+      "default": "universal",
+      "required": true,
+      "options": [
+        { "label": "Universal", "value": "universal" },
+        { "label": "Direct", "value": "direct" }
+      ],
+      "env_variable": "SEARCH_MODE"
+    },
+    {
+      "type": "boolean",
+      "label": "Enable Tor routing",
+      "hint": "Route traffic through Tor (requires root startup, NET_ADMIN/NET_RAW capabilities)",
+      "default": false,
+      "required": false,
+      "env_variable": "USING_TOR"
+    },
+    {
+      "type": "boolean",
+      "label": "Enable file logging",
+      "hint": "Write logs to /var/log/shelfmark/ inside the container",
+      "default": false,
+      "required": false,
+      "env_variable": "ENABLE_LOGGING"
+    },
+    {
+      "type": "text",
+      "label": "Log level",
+      "hint": "Application log level (DEBUG, INFO, WARNING, ERROR)",
+      "default": "INFO",
+      "required": false,
+      "options": [
+        { "label": "Debug", "value": "DEBUG" },
+        { "label": "Info", "value": "INFO" },
+        { "label": "Warning", "value": "WARNING" },
+        { "label": "Error", "value": "ERROR" }
+      ],
+      "env_variable": "LOG_LEVEL"
+    }
+  ]
+}

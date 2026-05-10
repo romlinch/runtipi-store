@@ -1,0 +1,31 @@
+{
+  "services": [
+    {
+      "name": "shelfmark",
+      "image": "ghcr.io/calibrain/shelfmark:latest",
+      "isMain": true,
+      "internalPort": "8084",
+      "environment": {
+        "PUID": "1000",
+        "PGID": "1000",
+        "TZ": "${TZ}",
+        "SEARCH_MODE": "${SEARCH_MODE}",
+        "USING_TOR": "${USING_TOR}",
+        "ENABLE_LOGGING": "${ENABLE_LOGGING}",
+        "LOG_LEVEL": "${LOG_LEVEL}",
+        "FLASK_PORT": "8084",
+        "INGEST_DIR": "/books"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/config",
+          "containerPath": "/config"
+        },
+        {
+          "hostPath": "${ROOT_FOLDER_HOST}/media/data/books/ebooks",
+          "containerPath": "/books"
+        }
+      ]
+    }
+  ]
+}
