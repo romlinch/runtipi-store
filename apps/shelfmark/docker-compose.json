@@ -24,6 +24,10 @@
         {
           "hostPath": "${ROOT_FOLDER_HOST}/media/data/books/ebooks",
           "containerPath": "/books"
+        },
+        {
+          "hostPath": "${ROOT_FOLDER_HOST}/media/data/books/spoken",
+          "containerPath": "/audiobooks"
         }
       ]
     }

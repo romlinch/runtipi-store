@@ -10,8 +10,8 @@
     "books"
   ],
   "description": "Shelfmark is a self-hosted web interface for searching and requesting books and audiobooks across multiple sources (web, torrent, usenet, IRC). It integrates with metadata providers (Hardcover, Open Library, Google Books) and library tools like Calibre, Calibre-Web, Calibre-Web-Automated, Grimmory, and Audiobookshelf. Multi-user support with built-in request system and approval workflows.",
-  "tipi_version": 1,
-  "version": "latest",
+  "tipi_version": 2,
+  "version": "1.0.1",
   "source": "https://github.com/calibrain/shelfmark",
   "exposable": true,
   "supported_architectures": [
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1746403200000,
-  "updated_at": 1746403200000,
+  "updated_at": 1778429716911,
   "dynamic_config": true,
   "form_fields": [
     {
@@ -37,8 +37,14 @@
       "default": "universal",
       "required": true,
       "options": [
-        { "label": "Universal", "value": "universal" },
-        { "label": "Direct", "value": "direct" }
+        {
+          "label": "Universal",
+          "value": "universal"
+        },
+        {
+          "label": "Direct",
+          "value": "direct"
+        }
       ],
       "env_variable": "SEARCH_MODE"
     },
@@ -65,10 +71,22 @@
       "default": "INFO",
       "required": false,
       "options": [
-        { "label": "Debug", "value": "DEBUG" },
-        { "label": "Info", "value": "INFO" },
-        { "label": "Warning", "value": "WARNING" },
-        { "label": "Error", "value": "ERROR" }
+        {
+          "label": "Debug",
+          "value": "DEBUG"
+        },
+        {
+          "label": "Info",
+          "value": "INFO"
+        },
+        {
+          "label": "Warning",
+          "value": "WARNING"
+        },
+        {
+          "label": "Error",
+          "value": "ERROR"
+        }
       ],
       "env_variable": "LOG_LEVEL"
     }

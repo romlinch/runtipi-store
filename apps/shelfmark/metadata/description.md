@@ -29,7 +29,8 @@ Works great alongside the following library tools, with support for automatic im
 ## Volumes
 
 - `${APP_DATA_DIR}/config` → `/config` — app configuration, database, and artwork cache
-- `${ROOT_FOLDER_HOST}/media/data/books/ebooks` → `/books` — book download destination (shared with Calibre-Web-Automated ingest folder for automatic imports)
+- `${ROOT_FOLDER_HOST}/media/data/books/ebooks` → `/books` — ebook download destination (shared with Calibre-Web-Automated ingest folder for automatic imports)
+- `${ROOT_FOLDER_HOST}/media/data/books/spoken` → `/audiobooks` — audiobook download destination
 
 > **Tip**: Pointing the download volume to your CWA or Grimmory ingest folder enables automatic import.
 
