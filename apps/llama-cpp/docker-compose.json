@@ -44,7 +44,7 @@
         "--port",
         "8080",
         "--ctx-size",
-        "32768",
+        "65536",
         "--parallel",
         "1",
         "--n-gpu-layers",
