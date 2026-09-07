@@ -1,0 +1,25 @@
+{
+  "name": "Wallos",
+  "id": "wallos",
+  "available": true,
+  "short_desc": "Open-Source Personal Subscription Tracker",
+  "author": "Miguel Ribeiro",
+  "port": 8222,
+  "categories": [
+    "finance"
+  ],
+  "description": "Wallos is a self-hosted tracker for personal subscriptions: renewal dates, costs per period, categories, payment methods and multi-currency conversion, with notifications before a renewal.\n\nFork of the official Runtipi app store definition, identical except for supported_architectures: upstream declares amd64 only, while bellamy/wallos publishes an arm64 image (verified: it pulls as arm64/linux on an aarch64 SBC). Without arm64 declared, Runtipi refuses to install with APP_ERROR_ARCHITECTURE_NOT_SUPPORTED.",
+  "tipi_version": 156,
+  "version": "5.5.0",
+  "source": "https://github.com/ellite/Wallos",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1691943801422,
+  "updated_at": 1788807600000,
+  "dynamic_config": true,
+  "min_tipi_version": "4.5.0",
+  "form_fields": []
+}
