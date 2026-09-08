@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "calibre",
-      "image": "quay.io/linuxserver.io/calibre:8.7.0",
+      "image": "quay.io/linuxserver.io/calibre:9.14.0",
       "isMain": true,
       "internalPort": "8080",
       "addPorts": [
