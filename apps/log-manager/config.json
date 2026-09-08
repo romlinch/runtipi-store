@@ -10,7 +10,7 @@
     "data"
   ],
   "description": "A comprehensive log management solution featuring OpenSearch for search and analytics, OpenSearch Dashboards for visualization, and Fluent Bit for log collection and forwarding. Perfect for centralizing logs from multiple sources including Docker containers, system logs, and network devices.",
-  "tipi_version": 4,
+  "tipi_version": 5,
   "version": "3.8.0",
   "source": "https://opensearch.org/",
   "exposable": true,
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1736090600000,
-  "updated_at": 1788898405637,
+  "updated_at": 1788898529048,
   "dynamic_config": true,
   "form_fields": [
     {
