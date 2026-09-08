@@ -55,7 +55,7 @@
     },
     {
       "name": "fluent-bit",
-      "image": "fluent/fluent-bit:2.2.0",
+      "image": "fluent/fluent-bit:5.1.2",
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/fluent-bit.conf",
