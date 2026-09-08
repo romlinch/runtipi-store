@@ -10,8 +10,8 @@
     "development"
   ],
   "description": "Omni Tools provides a comprehensive collection of web-based utilities and tools for various tasks including text processing, file conversion, development utilities, and more.",
-  "tipi_version": 2,
-  "version": "0.5.1",
+  "tipi_version": 3,
+  "version": "0.6.0",
   "source": "https://github.com/iib0011/omni-tools",
   "exposable": true,
   "supported_architectures": [
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1736090400000,
-  "updated_at": 1736090400000,
+  "updated_at": 1788898239486,
   "dynamic_config": true,
   "form_fields": []
 }
