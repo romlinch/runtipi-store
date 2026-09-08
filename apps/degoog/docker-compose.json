@@ -1,0 +1,21 @@
+{
+  "services": [
+    {
+      "name": "degoog",
+      "image": "ghcr.io/degoog-org/degoog:0.25.0",
+      "isMain": true,
+      "internalPort": 4444,
+      "environment": {
+        "DEGOOG_SETTINGS_PASSWORDS": "${DEGOOG_SETTINGS_PASSWORDS}",
+        "DEGOOG_PUBLIC_INSTANCE": "${DEGOOG_PUBLIC_INSTANCE}",
+        "TZ": "${TZ}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/app/data"
+        }
+      ]
+    }
+  ]
+}

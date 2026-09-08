@@ -1,0 +1,40 @@
+{
+  "name": "Degoog",
+  "id": "degoog",
+  "available": true,
+  "short_desc": "Private metasearch engine, no Google, no tracking",
+  "author": "fccview",
+  "port": 4444,
+  "categories": [
+    "utilities"
+  ],
+  "description": "Degoog is a self-hosted, privacy-respecting metasearch engine. It aggregates results from multiple engines without profiling, logging or ads, and supports themes, shortcuts (bangs), an optional indexer and extensions.\n\nThis definition uses the minimal single-container setup (in-memory cache). Valkey and PostgreSQL backends exist upstream for high-traffic public instances and are not included here.",
+  "tipi_version": 1,
+  "version": "0.25.0",
+  "source": "https://github.com/degoog-org/degoog",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1757289600000,
+  "updated_at": 1757289600000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Settings password",
+      "hint": "Protects admin and extension-store actions. Required: an unlocked instance lets anyone install extensions, which runs code on the server.",
+      "required": true,
+      "env_variable": "DEGOOG_SETTINGS_PASSWORDS"
+    },
+    {
+      "type": "boolean",
+      "label": "Public instance",
+      "hint": "Keep every admin and store action behind the password, even from the local network.",
+      "default": false,
+      "required": false,
+      "env_variable": "DEGOOG_PUBLIC_INSTANCE"
+    }
+  ]
+}
