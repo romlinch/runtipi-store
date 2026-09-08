@@ -1,0 +1,28 @@
+{
+  "services": [
+    {
+      "name": "immich-machine-learning",
+      "image": "ghcr.io/immich-app/immich-machine-learning:v3.0.2",
+      "isMain": true,
+      "internalPort": "3003",
+      "environment": {
+        "MACHINE_LEARNING_WORKERS": "4",
+        "MACHINE_LEARNING_WORKER_TIMEOUT": "300",
+        "MACHINE_LEARNING_MODEL_INTER_OP_THREADS": "10",
+        "MACHINE_LEARNING_MODEL_INTRA_OP_THREADS": "10"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/cache",
+          "containerPath": "/cache"
+        }
+      ],
+      "addPorts": [
+        {
+          "containerPort": "3003",
+          "hostPort": "3003"
+        }
+      ]
+    }
+  ]
+}
