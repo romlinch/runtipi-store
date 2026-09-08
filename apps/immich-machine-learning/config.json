@@ -10,8 +10,8 @@
     "ai"
   ],
   "description": "Runs Immich's machine-learning service on its own, so a separate Immich instance (e.g. on a NAS) can offload face recognition and CLIP smart search to a beefier host instead of running that workload on the NAS itself. Point the NAS's Immich Administration > Settings > Machine Learning > URL at `http://<this-host>:3003`. CPU build (image tag without `-cuda`): 4 workers, 300s worker timeout, 10 inter/intra-op threads.",
-  "tipi_version": 1,
-  "version": "3.0.2",
+  "tipi_version": 2,
+  "version": "v3.1.0",
   "source": "https://github.com/immich-app/immich",
   "exposable": false,
   "no_gui": true,
@@ -20,7 +20,7 @@
     "arm64"
   ],
   "created_at": 1788879613000,
-  "updated_at": 1788879613000,
+  "updated_at": 1788898228754,
   "dynamic_config": true,
   "form_fields": []
 }
