@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "opensearch",
-      "image": "opensearchproject/opensearch:2.11.1",
+      "image": "opensearchproject/opensearch:2.19.6",
       "environment": {
         "cluster.name": "opensearch-cluster",
         "node.name": "opensearch",
