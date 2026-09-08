@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "immich-machine-learning",
-      "image": "ghcr.io/immich-app/immich-machine-learning:v3.0.2",
+      "image": "ghcr.io/immich-app/immich-machine-learning:v3.1.0",
       "isMain": true,
       "internalPort": "3003",
       "environment": {
