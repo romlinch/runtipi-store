@@ -1,0 +1,46 @@
+{
+  "name": "RSSMonster",
+  "id": "rssmonster",
+  "available": true,
+  "short_desc": "Self-hosted RSS reader with smart folders and search",
+  "author": "pietheinstrengholt",
+  "port": 8431,
+  "categories": [
+    "utilities"
+  ],
+  "description": "RSSMonster is a modern, multi-user RSS reader with smart folders, full-text search, a three-pane reading layout and Fever / Google Reader API compatibility.\n\nThis definition uses the lightweight SQLite profile: the web app plus a dedicated crawl worker. The optional AI worker and inference service are not included.",
+  "tipi_version": 1,
+  "version": "2.3.0",
+  "source": "https://github.com/pietheinstrengholt/rssmonster",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1789250400000,
+  "updated_at": 1789250400000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "JWT secret",
+      "min": 64,
+      "env_variable": "RSSMONSTER_JWT_SECRET"
+    },
+    {
+      "type": "random",
+      "label": "Fever credential secret",
+      "hint": "Also derives the key encrypting stored inference API keys. Changing it invalidates them.",
+      "min": 64,
+      "env_variable": "RSSMONSTER_FEVER_CREDENTIAL_SECRET"
+    },
+    {
+      "type": "boolean",
+      "label": "Allow registration",
+      "hint": "The first registered account becomes admin. Disable once your accounts exist, before exposing the instance.",
+      "default": true,
+      "required": false,
+      "env_variable": "RSSMONSTER_ALLOW_REGISTRATION"
+    }
+  ]
+}
