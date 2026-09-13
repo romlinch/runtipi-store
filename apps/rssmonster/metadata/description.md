@@ -26,18 +26,27 @@ settings before exposing the instance publicly.
 
 ## Data
 
-SQLite database under `${APP_DATA_DIR}/data`, shared by the web app (runs migrations
-on start), the crawl worker and the AI worker.
+MySQL 8.4 database under `${APP_DATA_DIR}/mysql`, in its own container. The web app
+runs migrations on start; the crawl worker and the AI worker share the database.
 
-On first install both containers restart a few times: the image runs as a non-root
-user and the data directories only become writable once Runtipi applies its
-permissions after `docker compose up`. The worker does not wait for the app to be
+MySQL lifts the SQLite limits: the crawl worker fetches feeds in parallel
+(**Feed crawl concurrency**, default 3) and the AI worker runs several jobs at once
+(**AI job concurrency**, default 2). Raise the latter only if the LLM endpoint serves
+requests in parallel.
+
+There is no SQLite to MySQL migration upstream. Coming from the SQLite version of this
+definition, export the OPML first, reinstall, recreate the account and import it back.
+
+On first install the containers restart a few times: the image runs as a non-root
+user and `worker-health` only becomes writable once Runtipi applies its permissions
+after `docker compose up`. Every service waits for MySQL to be healthy (first
+initialisation takes up to a minute), but the workers do not wait for the app to be
 healthy on purpose: that wait makes `compose up` fail, and Runtipi then skips the
 permission step entirely.
 
 ## AI
 
-Four containers: web app, crawl worker, AI worker and inference service. Every
+Five containers: MySQL, web app, crawl worker, AI worker and inference service. Every
 capability (embeddings, summaries/tags, scoring, assistant) is sent to the single
 OpenAI-compatible endpoint configured in the form, typically a LiteLLM gateway. No
 model is downloaded or run locally, so the inference container stays small.
@@ -59,9 +68,6 @@ model is downloaded or run locally, so the inference container stays small.
 - With a reasoning model, point **Generation model** at a variant with thinking
   disabled: RSSMonster caps answers at 100-400 tokens and the reasoning consumes them,
   leaving empty results that are still recorded as successful.
-
-Not included from the upstream MySQL profile: MySQL itself. SQLite limits crawling
-and AI jobs to one at a time, which is fine for a personal instance.
 
 ## Links
 

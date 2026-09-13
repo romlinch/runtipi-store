@@ -1,6 +1,34 @@
 {
   "services": [
     {
+      "name": "rssmonster-mysql",
+      "image": "mysql:8.4",
+      "command": [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_0900_ai_ci"
+      ],
+      "environment": {
+        "MYSQL_DATABASE": "rssmonster",
+        "MYSQL_USER": "rssmonster",
+        "MYSQL_PASSWORD": "${RSSMONSTER_MYSQL_PASSWORD}",
+        "MYSQL_ROOT_PASSWORD": "${RSSMONSTER_MYSQL_ROOT_PASSWORD}",
+        "TZ": "${TZ}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/mysql",
+          "containerPath": "/var/lib/mysql"
+        }
+      ],
+      "healthCheck": {
+        "test": "mysqladmin ping --host=127.0.0.1 --user=root --password=${RSSMONSTER_MYSQL_ROOT_PASSWORD} --silent",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 10,
+        "startPeriod": "2m"
+      }
+    },
+    {
       "name": "rssmonster",
       "image": "rssmonster/rssmonster:sha-0dc7fb5",
       "isMain": true,
@@ -8,8 +36,12 @@
       "environment": {
         "NODE_ENV": "production",
         "PORT": "3000",
-        "DB_DIALECT": "sqlite",
-        "DB_STORAGE": "/app/data/rssmonster.sqlite",
+        "DB_DIALECT": "mysql",
+        "DB_HOSTNAME": "rssmonster-mysql",
+        "DB_PORT": "3306",
+        "DB_DATABASE": "rssmonster",
+        "DB_USERNAME": "rssmonster",
+        "DB_PASSWORD": "${RSSMONSTER_MYSQL_PASSWORD}",
         "JWT_SECRET": "${RSSMONSTER_JWT_SECRET}",
         "FEVER_CREDENTIAL_SECRET": "${RSSMONSTER_FEVER_CREDENTIAL_SECRET}",
         "ALLOW_REGISTRATION": "${RSSMONSTER_ALLOW_REGISTRATION}",
@@ -25,10 +57,6 @@
       },
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/data",
-          "containerPath": "/app/data"
-        },
-        {
           "hostPath": "${APP_DATA_DIR}/worker-health",
           "containerPath": "/app/worker-health",
           "readOnly": true
@@ -40,6 +68,11 @@
         "timeout": "5s",
         "retries": 5,
         "startPeriod": "60s"
+      },
+      "dependsOn": {
+        "rssmonster-mysql": {
+          "condition": "service_healthy"
+        }
       }
     },
     {
@@ -52,29 +85,36 @@
       ],
       "environment": {
         "NODE_ENV": "production",
-        "DB_DIALECT": "sqlite",
-        "DB_STORAGE": "/app/data/rssmonster.sqlite",
+        "DB_DIALECT": "mysql",
+        "DB_HOSTNAME": "rssmonster-mysql",
+        "DB_PORT": "3306",
+        "DB_DATABASE": "rssmonster",
+        "DB_USERNAME": "rssmonster",
+        "DB_PASSWORD": "${RSSMONSTER_MYSQL_PASSWORD}",
         "JWT_SECRET": "${RSSMONSTER_JWT_SECRET}",
         "FEVER_CREDENTIAL_SECRET": "${RSSMONSTER_FEVER_CREDENTIAL_SECRET}",
         "INFERENCE_BASE_URL": "http://rssmonster-inference:3001",
         "INFERENCE_TIMEOUT_MS": "900000",
         "INFERENCE_AI_ENABLED": "${RSSMONSTER_AI_ENABLED}",
         "CRAWL_WORKER_HEALTH_FILE": "/app/worker-health/crawl-worker-health.json",
-        "TZ": "${TZ}"
+        "TZ": "${TZ}",
+        "CRAWL_PARALLELPROCESSFLAG": "1",
+        "FEED_PARALLEL_CONCURRENCY": "${RSSMONSTER_FEED_CONCURRENCY}"
       },
       "volumes": [
-        {
-          "hostPath": "${APP_DATA_DIR}/data",
-          "containerPath": "/app/data"
-        },
         {
           "hostPath": "${APP_DATA_DIR}/worker-health",
           "containerPath": "/app/worker-health"
         }
       ],
-      "dependsOn": [
-        "rssmonster"
-      ],
+      "dependsOn": {
+        "rssmonster": {
+          "condition": "service_started"
+        },
+        "rssmonster-mysql": {
+          "condition": "service_healthy"
+        }
+      },
       "healthCheck": {
         "test": "node src/workers/checkCrawlWorkerHealth.js",
         "interval": "30s",
@@ -93,29 +133,35 @@
       ],
       "environment": {
         "NODE_ENV": "production",
-        "DB_DIALECT": "sqlite",
-        "DB_STORAGE": "/app/data/rssmonster.sqlite",
+        "DB_DIALECT": "mysql",
+        "DB_HOSTNAME": "rssmonster-mysql",
+        "DB_PORT": "3306",
+        "DB_DATABASE": "rssmonster",
+        "DB_USERNAME": "rssmonster",
+        "DB_PASSWORD": "${RSSMONSTER_MYSQL_PASSWORD}",
         "JWT_SECRET": "${RSSMONSTER_JWT_SECRET}",
         "FEVER_CREDENTIAL_SECRET": "${RSSMONSTER_FEVER_CREDENTIAL_SECRET}",
         "INFERENCE_BASE_URL": "http://rssmonster-inference:3001",
         "INFERENCE_TIMEOUT_MS": "900000",
         "INFERENCE_AI_ENABLED": "${RSSMONSTER_AI_ENABLED}",
         "AI_WORKER_HEALTH_FILE": "/app/worker-health/ai-worker-health.json",
-        "TZ": "${TZ}"
+        "TZ": "${TZ}",
+        "PROCESSING_JOB_CONCURRENCY": "${RSSMONSTER_AI_JOB_CONCURRENCY}"
       },
       "volumes": [
-        {
-          "hostPath": "${APP_DATA_DIR}/data",
-          "containerPath": "/app/data"
-        },
         {
           "hostPath": "${APP_DATA_DIR}/worker-health",
           "containerPath": "/app/worker-health"
         }
       ],
-      "dependsOn": [
-        "rssmonster"
-      ],
+      "dependsOn": {
+        "rssmonster": {
+          "condition": "service_started"
+        },
+        "rssmonster-mysql": {
+          "condition": "service_healthy"
+        }
+      },
       "healthCheck": {
         "test": "node src/workers/checkAiWorkerHealth.js",
         "interval": "30s",

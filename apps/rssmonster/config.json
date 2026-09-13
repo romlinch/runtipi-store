@@ -8,8 +8,8 @@
   "categories": [
     "utilities"
   ],
-  "description": "RSSMonster is a modern, multi-user RSS reader with smart folders, full-text search, a three-pane reading layout and Fever / Google Reader API compatibility.\n\nThis definition uses the SQLite profile with a crawl worker, an AI worker and the inference service. Every AI capability (embeddings, summaries/tags, scoring, assistant) goes to one OpenAI-compatible endpoint such as a LiteLLM gateway: no model is downloaded or run locally.",
-  "tipi_version": 4,
+  "description": "RSSMonster is a modern, multi-user RSS reader with smart folders, full-text search, a three-pane reading layout and Fever / Google Reader API compatibility.\n\nThis definition uses the MySQL profile (parallel crawling and AI jobs) with a crawl worker, an AI worker and the inference service. Every AI capability (embeddings, summaries/tags, scoring, assistant) goes to one OpenAI-compatible endpoint such as a LiteLLM gateway: no model is downloaded or run locally.",
+  "tipi_version": 5,
   "version": "2.3.0",
   "source": "https://github.com/pietheinstrengholt/rssmonster",
   "exposable": true,
@@ -18,7 +18,7 @@
     "amd64"
   ],
   "created_at": 1789250400000,
-  "updated_at": 1789250400000,
+  "updated_at": 1789337550062,
   "dynamic_config": true,
   "form_fields": [
     {
@@ -33,6 +33,34 @@
       "hint": "Also derives the key encrypting stored inference API keys. Changing it invalidates them.",
       "min": 64,
       "env_variable": "RSSMONSTER_FEVER_CREDENTIAL_SECRET"
+    },
+    {
+      "type": "random",
+      "label": "MySQL password",
+      "min": 32,
+      "env_variable": "RSSMONSTER_MYSQL_PASSWORD"
+    },
+    {
+      "type": "random",
+      "label": "MySQL root password",
+      "min": 32,
+      "env_variable": "RSSMONSTER_MYSQL_ROOT_PASSWORD"
+    },
+    {
+      "type": "number",
+      "label": "Feed crawl concurrency",
+      "hint": "Feeds fetched simultaneously by the crawl worker.",
+      "default": 3,
+      "required": false,
+      "env_variable": "RSSMONSTER_FEED_CONCURRENCY"
+    },
+    {
+      "type": "number",
+      "label": "AI job concurrency",
+      "hint": "AI jobs (summaries, tags, embeddings) run simultaneously. Bounded by what the LLM endpoint can serve in parallel.",
+      "default": 2,
+      "required": false,
+      "env_variable": "RSSMONSTER_AI_JOB_CONCURRENCY"
     },
     {
       "type": "boolean",
