@@ -50,7 +50,9 @@ model is downloaded or run locally, so the inference container stays small.
 - **Summary language** has no upstream setting. When set, the inference container
   patches a copy of its own source at startup: the bullet-summary prompt gains
   "in <language>, whatever the language of the article" and its token cap goes from
-  250 to 400 (French needs more tokens). Tags and scores are untouched. If a newer
+  250 to 400 (French needs more tokens), and a reminder follows the article text:
+  with the instruction only before the content, qwen kept English on long English
+  articles (0/2 vs 2/2 measured). Tags and scores are untouched. If a newer
   image no longer contains the patched lines, the container exits with
   `[summary-language] patch target not found` instead of silently summarizing in
   English: update the command in `docker-compose.json` along with the image tag.
