@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "rssmonster",
-      "image": "rssmonster/rssmonster:sha-e6ad401",
+      "image": "rssmonster/rssmonster:sha-0dc7fb5",
       "isMain": true,
       "internalPort": 3000,
       "environment": {
@@ -14,7 +14,13 @@
         "FEVER_CREDENTIAL_SECRET": "${RSSMONSTER_FEVER_CREDENTIAL_SECRET}",
         "ALLOW_REGISTRATION": "${RSSMONSTER_ALLOW_REGISTRATION}",
         "TRUST_PROXY": "1",
+        "INFERENCE_BASE_URL": "http://rssmonster-inference:3001",
+        "INFERENCE_TIMEOUT_MS": "900000",
+        "INFERENCE_AGENT_TIMEOUT_MS": "900000",
+        "INFERENCE_AI_ENABLED": "${RSSMONSTER_AI_ENABLED}",
+        "INFERENCE_ASSISTANT_ENABLED": "${RSSMONSTER_AI_ENABLED}",
         "CRAWL_WORKER_HEALTH_FILE": "/app/worker-health/crawl-worker-health.json",
+        "AI_WORKER_HEALTH_FILE": "/app/worker-health/ai-worker-health.json",
         "TZ": "${TZ}"
       },
       "volumes": [
@@ -38,7 +44,7 @@
     },
     {
       "name": "rssmonster-worker",
-      "image": "rssmonster/rssmonster:sha-e6ad401",
+      "image": "rssmonster/rssmonster:sha-0dc7fb5",
       "command": ["npm", "run", "start:worker"],
       "environment": {
         "NODE_ENV": "production",
@@ -46,6 +52,9 @@
         "DB_STORAGE": "/app/data/rssmonster.sqlite",
         "JWT_SECRET": "${RSSMONSTER_JWT_SECRET}",
         "FEVER_CREDENTIAL_SECRET": "${RSSMONSTER_FEVER_CREDENTIAL_SECRET}",
+        "INFERENCE_BASE_URL": "http://rssmonster-inference:3001",
+        "INFERENCE_TIMEOUT_MS": "900000",
+        "INFERENCE_AI_ENABLED": "${RSSMONSTER_AI_ENABLED}",
         "CRAWL_WORKER_HEALTH_FILE": "/app/worker-health/crawl-worker-health.json",
         "TZ": "${TZ}"
       },
@@ -66,6 +75,75 @@
         "timeout": "5s",
         "retries": 3,
         "startPeriod": "2m"
+      }
+    },
+    {
+      "name": "rssmonster-ai-worker",
+      "image": "rssmonster/rssmonster:sha-0dc7fb5",
+      "command": ["npm", "run", "start:ai-worker"],
+      "environment": {
+        "NODE_ENV": "production",
+        "DB_DIALECT": "sqlite",
+        "DB_STORAGE": "/app/data/rssmonster.sqlite",
+        "JWT_SECRET": "${RSSMONSTER_JWT_SECRET}",
+        "FEVER_CREDENTIAL_SECRET": "${RSSMONSTER_FEVER_CREDENTIAL_SECRET}",
+        "INFERENCE_BASE_URL": "http://rssmonster-inference:3001",
+        "INFERENCE_TIMEOUT_MS": "900000",
+        "INFERENCE_AI_ENABLED": "${RSSMONSTER_AI_ENABLED}",
+        "AI_WORKER_HEALTH_FILE": "/app/worker-health/ai-worker-health.json",
+        "TZ": "${TZ}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/app/data"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/worker-health",
+          "containerPath": "/app/worker-health"
+        }
+      ],
+      "dependsOn": ["rssmonster"],
+      "healthCheck": {
+        "test": "node src/workers/checkAiWorkerHealth.js",
+        "interval": "30s",
+        "timeout": "5s",
+        "retries": 3,
+        "startPeriod": "2m"
+      }
+    },
+    {
+      "name": "rssmonster-inference",
+      "image": "rssmonster/rssmonster-inference:sha-0dc7fb5",
+      "environment": {
+        "NODE_ENV": "production",
+        "INFERENCE_HOST": "0.0.0.0",
+        "INFERENCE_PORT": "3001",
+        "EMBEDDING_PROVIDER": "openai-compatible",
+        "EMBEDDING_BASE_URL": "${RSSMONSTER_LLM_BASE_URL}",
+        "EMBEDDING_API_KEY": "${RSSMONSTER_LLM_API_KEY}",
+        "EMBEDDING_MODEL": "${RSSMONSTER_EMBEDDING_MODEL}",
+        "EMBEDDING_DIMENSIONS": "${RSSMONSTER_EMBEDDING_DIMENSIONS}",
+        "GENERATION_PROVIDER": "openai-compatible",
+        "GENERATION_BASE_URL": "${RSSMONSTER_LLM_BASE_URL}",
+        "GENERATION_API_KEY": "${RSSMONSTER_LLM_API_KEY}",
+        "GENERATION_MODEL": "${RSSMONSTER_GENERATION_MODEL}",
+        "CLASSIFICATION_PROVIDER": "openai-compatible",
+        "CLASSIFICATION_BASE_URL": "${RSSMONSTER_LLM_BASE_URL}",
+        "CLASSIFICATION_API_KEY": "${RSSMONSTER_LLM_API_KEY}",
+        "CLASSIFICATION_MODEL": "${RSSMONSTER_GENERATION_MODEL}",
+        "ASSISTANT_PROVIDER": "openai-compatible",
+        "ASSISTANT_BASE_URL": "${RSSMONSTER_LLM_BASE_URL}",
+        "ASSISTANT_API_KEY": "${RSSMONSTER_LLM_API_KEY}",
+        "ASSISTANT_MODEL": "${RSSMONSTER_ASSISTANT_MODEL}",
+        "TZ": "${TZ}"
+      },
+      "healthCheck": {
+        "test": "node -e \"fetch('http://127.0.0.1:3001/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\"",
+        "interval": "30s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "60s"
       }
     }
   ]

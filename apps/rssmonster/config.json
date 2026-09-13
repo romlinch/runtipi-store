@@ -8,8 +8,8 @@
   "categories": [
     "utilities"
   ],
-  "description": "RSSMonster is a modern, multi-user RSS reader with smart folders, full-text search, a three-pane reading layout and Fever / Google Reader API compatibility.\n\nThis definition uses the lightweight SQLite profile: the web app plus a dedicated crawl worker. The optional AI worker and inference service are not included.",
-  "tipi_version": 1,
+  "description": "RSSMonster is a modern, multi-user RSS reader with smart folders, full-text search, a three-pane reading layout and Fever / Google Reader API compatibility.\n\nThis definition uses the SQLite profile with a crawl worker, an AI worker and the inference service. Every AI capability (embeddings, summaries/tags, scoring, assistant) goes to one OpenAI-compatible endpoint such as a LiteLLM gateway: no model is downloaded or run locally.",
+  "tipi_version": 2,
   "version": "2.3.0",
   "source": "https://github.com/pietheinstrengholt/rssmonster",
   "exposable": true,
@@ -41,6 +41,59 @@
       "default": true,
       "required": false,
       "env_variable": "RSSMONSTER_ALLOW_REGISTRATION"
+    },
+    {
+      "type": "boolean",
+      "label": "Enable AI",
+      "hint": "Summaries, tags, scores, semantic search and assistant through the endpoint below.",
+      "default": false,
+      "required": false,
+      "env_variable": "RSSMONSTER_AI_ENABLED"
+    },
+    {
+      "type": "url",
+      "label": "OpenAI-compatible base URL",
+      "hint": "Must end with /v1, e.g. https://litellm.example.com/v1",
+      "required": false,
+      "env_variable": "RSSMONSTER_LLM_BASE_URL"
+    },
+    {
+      "type": "password",
+      "label": "API key",
+      "required": false,
+      "env_variable": "RSSMONSTER_LLM_API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Embedding model",
+      "hint": "Definitive for the database: vectors from different models cannot be mixed and are not migrated.",
+      "default": "qwen3-embedding-8b",
+      "required": false,
+      "env_variable": "RSSMONSTER_EMBEDDING_MODEL"
+    },
+    {
+      "type": "number",
+      "label": "Embedding dimensions",
+      "hint": "Must match the model output (qwen3-embedding-8b: 4096).",
+      "default": 4096,
+      "required": false,
+      "env_variable": "RSSMONSTER_EMBEDDING_DIMENSIONS"
+    },
+    {
+      "type": "text",
+      "label": "Generation model",
+      "hint": "Summaries, tags, labels and article scoring.",
+      "default": "qwen",
+      "required": false,
+      "env_variable": "RSSMONSTER_GENERATION_MODEL"
+    },
+    {
+      "type": "text",
+      "label": "Assistant model",
+      "hint": "Needs tool calling and streaming.",
+      "default": "qwen",
+      "required": false,
+      "env_variable": "RSSMONSTER_ASSISTANT_MODEL"
     }
   ]
 }
