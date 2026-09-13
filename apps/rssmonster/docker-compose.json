@@ -45,7 +45,11 @@
     {
       "name": "rssmonster-worker",
       "image": "rssmonster/rssmonster:sha-0dc7fb5",
-      "command": ["npm", "run", "start:worker"],
+      "command": [
+        "npm",
+        "run",
+        "start:worker"
+      ],
       "environment": {
         "NODE_ENV": "production",
         "DB_DIALECT": "sqlite",
@@ -68,7 +72,9 @@
           "containerPath": "/app/worker-health"
         }
       ],
-      "dependsOn": ["rssmonster"],
+      "dependsOn": [
+        "rssmonster"
+      ],
       "healthCheck": {
         "test": "node src/workers/checkCrawlWorkerHealth.js",
         "interval": "30s",
@@ -80,7 +86,11 @@
     {
       "name": "rssmonster-ai-worker",
       "image": "rssmonster/rssmonster:sha-0dc7fb5",
-      "command": ["npm", "run", "start:ai-worker"],
+      "command": [
+        "npm",
+        "run",
+        "start:ai-worker"
+      ],
       "environment": {
         "NODE_ENV": "production",
         "DB_DIALECT": "sqlite",
@@ -103,7 +113,9 @@
           "containerPath": "/app/worker-health"
         }
       ],
-      "dependsOn": ["rssmonster"],
+      "dependsOn": [
+        "rssmonster"
+      ],
       "healthCheck": {
         "test": "node src/workers/checkAiWorkerHealth.js",
         "interval": "30s",
@@ -115,6 +127,11 @@
     {
       "name": "rssmonster-inference",
       "image": "rssmonster/rssmonster-inference:sha-0dc7fb5",
+      "command": [
+        "sh",
+        "-c",
+        "rm -rf /tmp/inference && mkdir -p /tmp/inference && cp -r /app/inference/src /app/inference/package.json /tmp/inference/ && ln -s /app/inference/node_modules /tmp/inference/node_modules && node -e \"const fs=require('fs');const f='/tmp/inference/src/classifications/articleClassificationService.js';const lang=(process.env.SUMMARY_LANGUAGE||'').trim();if(!lang)process.exit(0);let s=fs.readFileSync(f,'utf8');const a=\\\"'Write 3-6 bullet point summaries:'\\\",b='maxCompletionTokens: 250,';if(!s.includes(a)||!s.includes(b)){console.error('[summary-language] patch target not found: image changed, update the store definition');process.exit(1)}s=s.replace(a,JSON.stringify('Write 3-6 bullet point summaries in '+lang+', whatever the language of the article:')).replace(b,'maxCompletionTokens: 400,');fs.writeFileSync(f,s);console.log('[summary-language] bullet summaries in '+lang)\" && cd /tmp/inference && exec node src/index.js"
+      ],
       "environment": {
         "NODE_ENV": "production",
         "INFERENCE_HOST": "0.0.0.0",
@@ -136,7 +153,8 @@
         "ASSISTANT_BASE_URL": "${RSSMONSTER_LLM_BASE_URL}",
         "ASSISTANT_API_KEY": "${RSSMONSTER_LLM_API_KEY}",
         "ASSISTANT_MODEL": "${RSSMONSTER_ASSISTANT_MODEL}",
-        "TZ": "${TZ}"
+        "TZ": "${TZ}",
+        "SUMMARY_LANGUAGE": "${RSSMONSTER_SUMMARY_LANGUAGE}"
       },
       "healthCheck": {
         "test": "node -e \"fetch('http://127.0.0.1:3001/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\"",

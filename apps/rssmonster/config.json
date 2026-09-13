@@ -9,7 +9,7 @@
     "utilities"
   ],
   "description": "RSSMonster is a modern, multi-user RSS reader with smart folders, full-text search, a three-pane reading layout and Fever / Google Reader API compatibility.\n\nThis definition uses the SQLite profile with a crawl worker, an AI worker and the inference service. Every AI capability (embeddings, summaries/tags, scoring, assistant) goes to one OpenAI-compatible endpoint such as a LiteLLM gateway: no model is downloaded or run locally.",
-  "tipi_version": 2,
+  "tipi_version": 3,
   "version": "2.3.0",
   "source": "https://github.com/pietheinstrengholt/rssmonster",
   "exposable": true,
@@ -94,6 +94,13 @@
       "default": "qwen",
       "required": false,
       "env_variable": "RSSMONSTER_ASSISTANT_MODEL"
+    },
+    {
+      "type": "text",
+      "label": "Summary language",
+      "hint": "Language of the AI bullet summaries, e.g. French. Empty keeps upstream behaviour (usually English). Existing summaries are not regenerated.",
+      "required": false,
+      "env_variable": "RSSMONSTER_SUMMARY_LANGUAGE"
     }
   ]
 }

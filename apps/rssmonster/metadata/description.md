@@ -47,6 +47,16 @@ model is downloaded or run locally, so the inference container stays small.
 - **Embedding model** cannot be changed once articles have vectors: RSSMonster does
   not migrate vectors between models.
 - Timeouts are 15 minutes, to survive a cold model load on the gateway side.
+- **Summary language** has no upstream setting. When set, the inference container
+  patches a copy of its own source at startup: the bullet-summary prompt gains
+  "in <language>, whatever the language of the article" and its token cap goes from
+  250 to 400 (French needs more tokens). Tags and scores are untouched. If a newer
+  image no longer contains the patched lines, the container exits with
+  `[summary-language] patch target not found` instead of silently summarizing in
+  English: update the command in `docker-compose.json` along with the image tag.
+- With a reasoning model, point **Generation model** at a variant with thinking
+  disabled: RSSMonster caps answers at 100-400 tokens and the reasoning consumes them,
+  leaving empty results that are still recorded as successful.
 
 Not included from the upstream MySQL profile: MySQL itself. SQLite limits crawling
 and AI jobs to one at a time, which is fine for a personal instance.
