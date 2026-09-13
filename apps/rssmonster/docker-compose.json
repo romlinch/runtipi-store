@@ -59,11 +59,7 @@
           "containerPath": "/app/worker-health"
         }
       ],
-      "dependsOn": {
-        "rssmonster": {
-          "condition": "service_healthy"
-        }
-      },
+      "dependsOn": ["rssmonster"],
       "healthCheck": {
         "test": "node src/workers/checkCrawlWorkerHealth.js",
         "interval": "30s",

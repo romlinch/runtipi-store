@@ -27,7 +27,13 @@ settings before exposing the instance publicly.
 ## Data
 
 SQLite database under `${APP_DATA_DIR}/data`. Two containers share it: the web app
-(runs migrations on start) and the crawl worker, which waits for the app to be healthy.
+(runs migrations on start) and the crawl worker.
+
+On first install both containers restart a few times: the image runs as a non-root
+user and the data directories only become writable once Runtipi applies its
+permissions after `docker compose up`. The worker does not wait for the app to be
+healthy on purpose: that wait makes `compose up` fail, and Runtipi then skips the
+permission step entirely.
 
 ## Not included
 
