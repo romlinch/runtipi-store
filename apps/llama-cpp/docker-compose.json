@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "llama-cpp",
-      "image": "ghcr.io/ggml-org/llama.cpp:server-cuda-b11065",
+      "image": "ghcr.io/ggml-org/llama.cpp:server-cuda",
       "isMain": true,
       "internalPort": "8080",
       "addToMainNetwork": true,

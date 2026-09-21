@@ -30,7 +30,7 @@
     },
     {
       "name": "rssmonster",
-      "image": "rssmonster/rssmonster:sha-0dc7fb5",
+      "image": "rssmonster/rssmonster:latest",
       "isMain": true,
       "internalPort": 3000,
       "environment": {
@@ -77,7 +77,7 @@
     },
     {
       "name": "rssmonster-worker",
-      "image": "rssmonster/rssmonster:sha-0dc7fb5",
+      "image": "rssmonster/rssmonster:latest",
       "command": [
         "npm",
         "run",
@@ -125,7 +125,7 @@
     },
     {
       "name": "rssmonster-ai-worker",
-      "image": "rssmonster/rssmonster:sha-0dc7fb5",
+      "image": "rssmonster/rssmonster:latest",
       "command": [
         "npm",
         "run",
@@ -172,7 +172,7 @@
     },
     {
       "name": "rssmonster-inference",
-      "image": "rssmonster/rssmonster-inference:sha-0dc7fb5",
+      "image": "rssmonster/rssmonster-inference:latest",
       "command": [
         "sh",
         "-c",
