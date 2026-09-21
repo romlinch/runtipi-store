@@ -10,7 +10,7 @@
     "books"
   ],
   "description": "Calibre-Web Automated combines the Calibre-Web UI with Calibre's conversion engine and a suite of automations: automatic ingestion and format conversion, metadata enforcement, EPUB fixing, send-to-Kindle, KOReader sync, and Hardcover integration.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "4.0.6",
   "source": "https://github.com/crocodilestick/Calibre-Web-Automated",
   "exposable": true,
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1746403200000,
-  "updated_at": 1746403200000,
+  "updated_at": 1790022958227,
   "dynamic_config": true,
   "form_fields": [
     {

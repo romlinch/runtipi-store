@@ -42,4 +42,7 @@ jobs:
         run: bun install -g renovate@40
 
       - name: Run renovate
+        env:
+          RENOVATE_ALLOWED_COMMANDS: '["^bun .*"]'
+          RENOVATE_ALLOW_POST_UPGRADE_COMMAND_TEMPLATING: "true"
         run: LOG_LEVEL=${{ github.event.inputs.log_level || 'INFO' }} renovate --token ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}

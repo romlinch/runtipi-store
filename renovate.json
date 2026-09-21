@@ -49,6 +49,26 @@
         "redis"
       ],
       "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/ggml-org/llama.cpp"
+      ],
+      "versioning": "regex:^server-cuda-b(?<major>\\d+)$"
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/servercontainers/samba"
+      ],
+      "versioning": "regex:^a(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-s(?<build>[\\d.]+)-r(?<revision>\\d+)$"
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/berriai/litellm-database",
+        "ghcr.io/calibrain/shelfmark",
+        "crocodilestick/calibre-web-automated"
+      ],
+      "ignoreUnstable": true
     }
   ],
   "postUpgradeTasks": {

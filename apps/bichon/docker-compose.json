@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "bichon",
-      "image": "rustmailer/bichon:latest",
+      "image": "rustmailer/bichon:2.0.3",
       "isMain": true,
       "internalPort": "15630",
       "user": "1000",

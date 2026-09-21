@@ -10,8 +10,8 @@
     "development"
   ],
   "description": "llama-server in router mode: several models declared in a preset file, loaded on the first request and unloaded after --sleep-idle-seconds. Exposes an OpenAI-compatible API consumed by LiteLLM. Ships with presets for two abliterated (uncensored) Qwen models: qwen (Qwen3.6-35B-A3B, MoE with experts offloaded to RAM) and qwen-fast (Qwen3.5-4B, fully GPU-resident).",
-  "tipi_version": 16,
-  "version": "0.2.0",
+  "tipi_version": 17,
+  "version": "b11065",
   "source": "https://github.com/ggml-org/llama.cpp",
   "website": "https://github.com/ggml-org/llama.cpp",
   "exposable": false,
@@ -20,7 +20,7 @@
     "amd64"
   ],
   "created_at": 1745251200000,
-  "updated_at": 1787297806967,
+  "updated_at": 1790022958266,
   "dynamic_config": true,
   "form_fields": [
     {
