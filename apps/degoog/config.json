@@ -9,8 +9,8 @@
     "utilities"
   ],
   "description": "Degoog is a self-hosted, privacy-respecting metasearch engine. It aggregates results from multiple engines without profiling, logging or ads, and supports themes, shortcuts (bangs), an optional indexer and extensions.\n\nThis definition uses the minimal single-container setup (in-memory cache). Valkey and PostgreSQL backends exist upstream for high-traffic public instances and are not included here.",
-  "tipi_version": 1,
-  "version": "0.25.0",
+  "tipi_version": 2,
+  "version": "0.26.0",
   "source": "https://github.com/degoog-org/degoog",
   "exposable": true,
   "supported_architectures": [
