@@ -1,0 +1,64 @@
+{
+  "name": "Crawl4AI",
+  "id": "crawl4ai",
+  "available": true,
+  "short_desc": "LLM-friendly web crawler and scraper with a REST API",
+  "author": "unclecode",
+  "port": 11235,
+  "categories": [
+    "ai",
+    "utilities"
+  ],
+  "description": "Crawl4AI turns web pages into clean markdown for LLMs. It runs headless Chromium behind a REST API, supports deep crawling, CSS/XPath and LLM-based extraction, and exposes an MCP endpoint.",
+  "tipi_version": 1,
+  "version": "0.9.3",
+  "source": "https://github.com/unclecode/crawl4ai",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1758412800000,
+  "updated_at": 1758412800000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "API Token",
+      "hint": "Required. Without it the server binds loopback only and stays unreachable. Sent as 'Authorization: Bearer <token>'.",
+      "required": true,
+      "env_variable": "CRAWL4AI_API_TOKEN"
+    },
+    {
+      "type": "text",
+      "label": "LLM Provider",
+      "hint": "LiteLLM-style model id used for LLM extraction, e.g. openai/qwen",
+      "default": "openai/qwen",
+      "required": false,
+      "env_variable": "CRAWL4AI_LLM_PROVIDER"
+    },
+    {
+      "type": "url",
+      "label": "OpenAI-compatible Base URL",
+      "hint": "Point at your LiteLLM proxy, e.g. http://litellm:4000/v1",
+      "default": "http://litellm:4000/v1",
+      "required": false,
+      "env_variable": "CRAWL4AI_OPENAI_BASE_URL"
+    },
+    {
+      "type": "text",
+      "label": "LLM API Key",
+      "hint": "LiteLLM master key (or the provider's API key)",
+      "required": false,
+      "env_variable": "CRAWL4AI_OPENAI_API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Memory Limit",
+      "hint": "Hard cap for the container. Chromium needs ~400MB per open page.",
+      "default": "4G",
+      "required": true,
+      "env_variable": "CRAWL4AI_MEMORY_LIMIT"
+    }
+  ]
+}

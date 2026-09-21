@@ -1,0 +1,36 @@
+{
+  "services": [
+    {
+      "name": "crawl4ai",
+      "image": "unclecode/crawl4ai:0.9.3",
+      "isMain": true,
+      "internalPort": "11235",
+      "addToMainNetwork": true,
+      "shmSize": "1gb",
+      "environment": {
+        "CRAWL4AI_API_TOKEN": "${CRAWL4AI_API_TOKEN}",
+        "LLM_PROVIDER": "${CRAWL4AI_LLM_PROVIDER}",
+        "OPENAI_BASE_URL": "${CRAWL4AI_OPENAI_BASE_URL}",
+        "OPENAI_API_KEY": "${CRAWL4AI_OPENAI_API_KEY}"
+      },
+      "securityOpt": [
+        "no-new-privileges:true"
+      ],
+      "healthCheck": {
+        "test": "curl -f http://localhost:11235/health || exit 1",
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3,
+        "startPeriod": "40s"
+      },
+      "deploy": {
+        "resources": {
+          "limits": {
+            "memory": "${CRAWL4AI_MEMORY_LIMIT}",
+            "pids": 512
+          }
+        }
+      }
+    }
+  ]
+}
