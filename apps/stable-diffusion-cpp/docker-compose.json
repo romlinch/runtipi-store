@@ -1,0 +1,46 @@
+{
+  "services": [
+    {
+      "name": "stable-diffusion-cpp",
+      "image": "ghcr.io/leejet/stable-diffusion.cpp:master-vulkan",
+      "isMain": true,
+      "internalPort": "8080",
+      "addToMainNetwork": true,
+      "entrypoint": "/sd-server",
+      "volumes": [
+        {
+          "hostPath": "${SD_MODELS_DIR}",
+          "containerPath": "/models",
+          "readOnly": true
+        }
+      ],
+      "addPorts": [
+        {
+          "containerPort": "8080",
+          "hostPort": "8087"
+        }
+      ],
+      "command": [
+        "--listen-ip",
+        "0.0.0.0",
+        "--listen-port",
+        "8080",
+        "--backend",
+        "cpu",
+        "--threads",
+        "${SD_THREADS}",
+        "--diffusion-model",
+        "/models/${SD_DIFFUSION_MODEL}",
+        "--llm",
+        "/models/${SD_LLM}",
+        "--vae",
+        "/models/${SD_VAE}",
+        "--diffusion-fa",
+        "--steps",
+        "${SD_STEPS}",
+        "--cfg-scale",
+        "${SD_CFG_SCALE}"
+      ]
+    }
+  ]
+}

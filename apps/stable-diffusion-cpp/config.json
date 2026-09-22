@@ -1,0 +1,80 @@
+{
+  "name": "stable-diffusion.cpp",
+  "id": "stable-diffusion-cpp",
+  "available": true,
+  "short_desc": "Local image generation and editing server (CPU) with an OpenAI-compatible API",
+  "author": "leejet",
+  "port": 8087,
+  "categories": [
+    "ai",
+    "media"
+  ],
+  "description": "sd-server from stable-diffusion.cpp, the ggml image counterpart of llama.cpp. Runs FLUX.2, Qwen-Image, Z-Image, SD/SDXL and more from GGUF files, CPU only by default. Exposes OpenAI-compatible /v1/images/generations and /v1/images/edits consumed by LiteLLM, plus a built-in web UI. Defaults target FLUX.2 klein 4B.",
+  "tipi_version": 1,
+  "version": "master-vulkan",
+  "source": "https://github.com/leejet/stable-diffusion.cpp",
+  "website": "https://github.com/leejet/stable-diffusion.cpp",
+  "exposable": false,
+  "supported_architectures": [
+    "amd64"
+  ],
+  "created_at": 1790114792592,
+  "updated_at": 1790114792592,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Models directory (host path)",
+      "hint": "Absolute host path holding the diffusion model, text encoder and VAE (e.g. /home/romain/models/flux2-klein-4b)",
+      "required": true,
+      "env_variable": "SD_MODELS_DIR"
+    },
+    {
+      "type": "text",
+      "label": "Diffusion model file",
+      "hint": "File name inside the models directory",
+      "default": "flux-2-klein-4b-Q8_0.gguf",
+      "required": true,
+      "env_variable": "SD_DIFFUSION_MODEL"
+    },
+    {
+      "type": "text",
+      "label": "Text encoder (LLM) file",
+      "hint": "Qwen3-4B for FLUX.2 klein 4B",
+      "default": "Qwen3-4B-Q8_0.gguf",
+      "required": true,
+      "env_variable": "SD_LLM"
+    },
+    {
+      "type": "text",
+      "label": "VAE file",
+      "default": "flux2-vae.safetensors",
+      "required": true,
+      "env_variable": "SD_VAE"
+    },
+    {
+      "type": "number",
+      "label": "Sampling steps",
+      "hint": "4 for FLUX.2 klein (distilled)",
+      "default": 4,
+      "required": true,
+      "env_variable": "SD_STEPS"
+    },
+    {
+      "type": "text",
+      "label": "CFG scale",
+      "hint": "1.0 for FLUX.2 klein. Above 1 doubles the compute per step.",
+      "default": "1.0",
+      "required": true,
+      "env_variable": "SD_CFG_SCALE"
+    },
+    {
+      "type": "number",
+      "label": "CPU threads",
+      "hint": "-1 = number of physical cores. Lower it to leave room for other CPU workloads.",
+      "default": -1,
+      "required": true,
+      "env_variable": "SD_THREADS"
+    }
+  ]
+}
