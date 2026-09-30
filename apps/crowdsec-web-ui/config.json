@@ -1,0 +1,47 @@
+{
+  "name": "CrowdSec Web UI",
+  "id": "crowdsec-web-ui",
+  "available": true,
+  "short_desc": "Tableau de bord CrowdSec : alertes, décisions, métriques",
+  "author": "TheDuffman85",
+  "port": 8190,
+  "categories": [
+    "security"
+  ],
+  "description": "Tableau de bord auto-hébergé pour CrowdSec : historique des alertes (conservé dans sa propre base SQLite), décisions actives et expirées, bannir/débannir une IP, métriques. Se connecte à l'API locale (LAPI) de CrowdSec avec un compte machine.",
+  "tipi_version": 1,
+  "version": "2026.9.2",
+  "source": "https://github.com/TheDuffman85/crowdsec-web-ui",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1790799827000,
+  "updated_at": 1790799827000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "url",
+      "label": "URL de l'API locale CrowdSec (LAPI)",
+      "hint": "Joignable depuis le conteneur, ex. http://192.168.1.91:8089",
+      "default": "http://192.168.1.91:8089",
+      "required": true,
+      "env_variable": "CS_LAPI_URL"
+    },
+    {
+      "type": "text",
+      "label": "Nom de la machine CrowdSec",
+      "default": "crowdsec-web-ui",
+      "required": true,
+      "env_variable": "CS_LAPI_USER"
+    },
+    {
+      "type": "random",
+      "label": "Mot de passe de la machine CrowdSec",
+      "hint": "Généré à l'installation. À enregistrer côté CrowdSec : cscli machines add <nom> --password <valeur> -f /dev/null",
+      "required": true,
+      "env_variable": "CS_LAPI_PASSWORD"
+    }
+  ]
+}

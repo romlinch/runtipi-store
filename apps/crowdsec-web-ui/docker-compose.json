@@ -1,0 +1,22 @@
+{
+  "services": [
+    {
+      "name": "crowdsec-web-ui",
+      "image": "ghcr.io/theduffman85/crowdsec-web-ui:2026.9.2",
+      "isMain": true,
+      "internalPort": 3000,
+      "environment": {
+        "CONFIG_INSTANCE_LAPI_URL": "${CS_LAPI_URL}",
+        "CONFIG_INSTANCE_LAPI_AUTH_USERNAME": "${CS_LAPI_USER}",
+        "CONFIG_INSTANCE_LAPI_AUTH_PASSWORD": "${CS_LAPI_PASSWORD}",
+        "CONFIG_AUTH_ENABLED": "true"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/app/data"
+        }
+      ]
+    }
+  ]
+}
