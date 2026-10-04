@@ -1,0 +1,42 @@
+# Logs de tous les conteneurs Docker de l'hôte vers VictoriaLogs (API Elasticsearch bulk).
+# Variables fournies par le formulaire runtipi : VLOGS_URL, VLOGS_PASSWORD, LOG_HOSTNAME
+# (VECTOR_DANGEROUSLY_ALLOW_ENV_VAR_INTERPOLATION=true dans docker-compose.json : désactivé par défaut depuis Vector 0.5x).
+
+sources:
+  docker:
+    type: docker_logs
+    # Pas ses propres logs : en cas d'erreur d'envoi, ils se nourriraient d'eux-mêmes.
+    exclude_containers: ["vector_"]
+
+transforms:
+  champs:
+    type: remap
+    inputs: [docker]
+    # Mêmes noms de champs que les logs syslog, pour filtrer tout pareil (hostname, app_name).
+    source: |
+      .hostname = "${LOG_HOSTNAME}"
+      .app_name = del(.container_name)
+      .message = strip_ansi_escape_codes(to_string(.message) ?? "")
+      del(.label)
+      del(.host)
+      del(.container_created_at)
+      del(.source_type)
+
+sinks:
+  victorialogs:
+    type: elasticsearch
+    inputs: [champs]
+    endpoints: ["${VLOGS_URL}/insert/elasticsearch/"]
+    mode: bulk
+    api_version: v8
+    compression: gzip
+    healthcheck:
+      enabled: false
+    auth:
+      strategy: basic
+      user: admin
+      password: "${VLOGS_PASSWORD}"
+    query:
+      _msg_field: message
+      _time_field: timestamp
+      _stream_fields: hostname,app_name

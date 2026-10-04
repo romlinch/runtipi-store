@@ -1,0 +1,27 @@
+{
+  "services": [
+    {
+      "name": "vector",
+      "image": "timberio/vector:0.58.0-alpine",
+      "isMain": true,
+      "environment": {
+        "VECTOR_DANGEROUSLY_ALLOW_ENV_VAR_INTERPOLATION": "true",
+        "VLOGS_URL": "${VLOGS_URL}",
+        "VLOGS_PASSWORD": "${VLOGS_PASSWORD}",
+        "LOG_HOSTNAME": "${LOG_HOSTNAME}"
+      },
+      "volumes": [
+        {
+          "hostPath": "/var/run/docker.sock",
+          "containerPath": "/var/run/docker.sock",
+          "readOnly": true
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/vector.yaml",
+          "containerPath": "/etc/vector/vector.yaml",
+          "readOnly": true
+        }
+      ]
+    }
+  ]
+}

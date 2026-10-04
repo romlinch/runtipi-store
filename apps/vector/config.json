@@ -1,0 +1,45 @@
+{
+  "name": "Vector (logs Docker)",
+  "id": "vector",
+  "available": true,
+  "short_desc": "Envoie les logs de tous les conteneurs Docker de l'hôte vers VictoriaLogs",
+  "author": "Datadog",
+  "categories": [
+    "utilities"
+  ],
+  "description": "Agent Vector qui lit les logs de tous les conteneurs Docker de l'hôte (socket Docker en lecture seule) et les envoie à VictoriaLogs, avec les champs hostname et app_name (nom du conteneur).",
+  "tipi_version": 1,
+  "version": "0.58.0",
+  "source": "https://github.com/vectordotdev/vector",
+  "exposable": false,
+  "no_gui": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1791137714000,
+  "updated_at": 1791137714000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Nom de cet hôte dans VictoriaLogs",
+      "hint": "Valeur du champ hostname, ex. Khadas ou big (comme dans les logs syslog)",
+      "required": true,
+      "env_variable": "LOG_HOSTNAME"
+    },
+    {
+      "type": "url",
+      "label": "URL de VictoriaLogs",
+      "default": "http://192.168.1.91:9428",
+      "required": true,
+      "env_variable": "VLOGS_URL"
+    },
+    {
+      "type": "password",
+      "label": "Mot de passe VictoriaLogs (utilisateur admin)",
+      "required": true,
+      "env_variable": "VLOGS_PASSWORD"
+    }
+  ]
+}
