@@ -10,8 +10,7 @@
         "-retentionPeriod=${VLOGS_RETENTION}",
         "-httpAuth.username=admin",
         "-httpAuth.password=${VLOGS_PASSWORD}",
-        "-syslog.listenAddr.tcp=:5141",
-        "-syslog.streamFields.tcp=hostname,app_name"
+        "-syslog.listenAddr.tcp=:5141"
       ],
       "addPorts": [
         {

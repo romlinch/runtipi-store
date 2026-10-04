@@ -19,7 +19,7 @@ action(type="omfwd" target="127.0.0.1" port="5141" protocol="tcp" template="VLog
 
 `queue.timeoutEnqueue="0"` : si l'app est arrêtée, la file garde 100 000 lignes puis les jette, sans jamais bloquer les autres actions du ruleset.
 
-Les flux sont découpés par `hostname` et `app_name`. Exemples de requêtes :
+Les flux sont découpés par `hostname`, `app_name` et `proc_id` (défaut syslog de VictoriaLogs). Exemples de requêtes :
 
 - `hostname:OpenWrt app_name:upsmon`
 - `app_name:kernel "banIP" | stats by (hostname) count()`

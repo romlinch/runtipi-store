@@ -9,7 +9,7 @@
     "utilities"
   ],
   "description": "Stockage et recherche de logs (LogsQL) avec interface web intégrée. Reçoit du syslog en TCP sur 127.0.0.1:5141, relayé par le rsyslog de l'hôte.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "1.53.0",
   "source": "https://github.com/VictoriaMetrics/VictoriaLogs",
   "exposable": true,
@@ -18,7 +18,7 @@
     "amd64"
   ],
   "created_at": 1791129998000,
-  "updated_at": 1791129998000,
+  "updated_at": 1791131080000,
   "dynamic_config": true,
   "form_fields": [
     {
