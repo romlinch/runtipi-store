@@ -1,0 +1,31 @@
+{
+  "services": [
+    {
+      "name": "victoria-logs",
+      "image": "victoriametrics/victoria-logs:v1.53.0",
+      "isMain": true,
+      "internalPort": 9428,
+      "command": [
+        "-storageDataPath=/vlogs",
+        "-retentionPeriod=${VLOGS_RETENTION}",
+        "-httpAuth.username=admin",
+        "-httpAuth.password=${VLOGS_PASSWORD}",
+        "-syslog.listenAddr.tcp=:5141",
+        "-syslog.streamFields.tcp=hostname,app_name"
+      ],
+      "addPorts": [
+        {
+          "containerPort": 5141,
+          "hostPort": 5141,
+          "interface": "127.0.0.1"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/vlogs"
+        }
+      ]
+    }
+  ]
+}

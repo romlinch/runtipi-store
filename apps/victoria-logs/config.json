@@ -1,0 +1,39 @@
+{
+  "name": "VictoriaLogs",
+  "id": "victoria-logs",
+  "available": true,
+  "short_desc": "Base de logs avec interface web de recherche, alimentée en syslog",
+  "author": "VictoriaMetrics",
+  "port": 9428,
+  "categories": [
+    "utilities"
+  ],
+  "description": "Stockage et recherche de logs (LogsQL) avec interface web intégrée. Reçoit du syslog en TCP sur 127.0.0.1:5141, relayé par le rsyslog de l'hôte.",
+  "tipi_version": 1,
+  "version": "1.53.0",
+  "source": "https://github.com/VictoriaMetrics/VictoriaLogs",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1791129998000,
+  "updated_at": 1791129998000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Mot de passe de l'interface (utilisateur admin)",
+      "required": true,
+      "env_variable": "VLOGS_PASSWORD"
+    },
+    {
+      "type": "text",
+      "label": "Durée de rétention",
+      "hint": "Suffixes d (jour), w (semaine), M (mois), y (an)",
+      "default": "90d",
+      "required": true,
+      "env_variable": "VLOGS_RETENTION"
+    }
+  ]
+}
