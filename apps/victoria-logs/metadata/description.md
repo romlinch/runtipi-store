@@ -10,11 +10,14 @@ L'app écoute le syslog en TCP sur `127.0.0.1:5141` (hôte uniquement). Le rsysl
 
 ```
 template(name="VLogsFormat" type="string"
-         string="<%PRI%>1 %timegenerated:::date-rfc3339% %HOSTNAME% %APP-NAME% %PROCID% - - %msg:::drop-last-lf%\n")
+         string="<%PRI%>1 %timegenerated:::date-rfc3339% %HOSTNAME% %APP-NAME% %PROCID% - -%msg:::sp-if-no-1st-sp%%msg:::drop-last-lf%\n")
 
 action(type="omfwd" target="127.0.0.1" port="5141" protocol="tcp" template="VLogsFormat"
-       queue.type="LinkedList" queue.size="100000" action.resumeRetryCount="-1")
+       queue.type="LinkedList" queue.size="100000" queue.timeoutEnqueue="0"
+       action.resumeRetryCount="-1" action.resumeInterval="10")
 ```
+
+`queue.timeoutEnqueue="0"` : si l'app est arrêtée, la file garde 100 000 lignes puis les jette, sans jamais bloquer les autres actions du ruleset.
 
 Les flux sont découpés par `hostname` et `app_name`. Exemples de requêtes :
 
