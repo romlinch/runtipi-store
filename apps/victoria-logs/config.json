@@ -9,7 +9,7 @@
     "utilities"
   ],
   "description": "Stockage et recherche de logs (LogsQL) avec interface web intégrée. Reçoit du syslog en TCP sur 127.0.0.1:5141, relayé par le rsyslog de l'hôte.",
-  "tipi_version": 2,
+  "tipi_version": 3,
   "version": "1.53.0",
   "source": "https://github.com/VictoriaMetrics/VictoriaLogs",
   "exposable": true,
@@ -18,14 +18,21 @@
     "amd64"
   ],
   "created_at": 1791129998000,
-  "updated_at": 1791131080000,
+  "updated_at": 1791131434000,
   "dynamic_config": true,
   "form_fields": [
     {
       "type": "random",
-      "label": "Mot de passe de l'interface (utilisateur admin)",
+      "label": "Mot de passe généré (utilisateur admin)",
       "required": true,
       "env_variable": "VLOGS_PASSWORD"
+    },
+    {
+      "type": "password",
+      "label": "Mot de passe choisi (utilisateur admin)",
+      "hint": "Remplace le mot de passe généré. Vide = mot de passe généré (VLOGS_PASSWORD dans app.env).",
+      "required": false,
+      "env_variable": "VLOGS_ADMIN_PASSWORD"
     },
     {
       "type": "text",

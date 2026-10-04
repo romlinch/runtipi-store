@@ -9,7 +9,7 @@
         "-storageDataPath=/vlogs",
         "-retentionPeriod=${VLOGS_RETENTION}",
         "-httpAuth.username=admin",
-        "-httpAuth.password=${VLOGS_PASSWORD}",
+        "-httpAuth.password=${VLOGS_ADMIN_PASSWORD:-${VLOGS_PASSWORD}}",
         "-syslog.listenAddr.tcp=:5141"
       ],
       "addPorts": [

@@ -2,7 +2,7 @@
 
 Base de logs de [VictoriaMetrics](https://docs.victoriametrics.com/victorialogs/) : un seul binaire, peu de RAM, forte compression, recherche en [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/) et interface web intégrée (`/select/vmui`).
 
-L'interface est protégée par une authentification basique : utilisateur `admin`, mot de passe généré à l'installation.
+L'interface est protégée par une authentification basique : utilisateur `admin`, mot de passe choisi dans les réglages de l'app, ou à défaut celui généré à l'installation (`VLOGS_PASSWORD` dans `app.env`).
 
 ## Alimentation
 
