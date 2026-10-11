@@ -10,8 +10,8 @@
     "utilities"
   ],
   "description": "Crawl4AI turns web pages into clean markdown for LLMs. It runs headless Chromium behind a REST API, supports deep crawling, CSS/XPath and LLM-based extraction, and exposes an MCP endpoint.",
-  "tipi_version": 1,
-  "version": "0.9.3",
+  "tipi_version": 2,
+  "version": "0.9.4",
   "source": "https://github.com/unclecode/crawl4ai",
   "exposable": true,
   "supported_architectures": [
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1758412800000,
-  "updated_at": 1758412800000,
+  "updated_at": 1791713382905,
   "dynamic_config": true,
   "form_fields": [
     {
