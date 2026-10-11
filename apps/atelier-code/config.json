@@ -1,0 +1,46 @@
+{
+  "name": "Atelier de code",
+  "id": "atelier-code",
+  "available": true,
+  "short_desc": "Les enfants apprennent le JavaScript en codant leur propre jeu vidéo, guidés par Qwen",
+  "author": "romlinch",
+  "port": 8110,
+  "categories": [
+    "development"
+  ],
+  "description": "Atelier de code pour enfants dans le navigateur : missions qui construisent un jeu vidéo pas à pas, éditeur, aperçu du jeu, et Pixel, un assistant (Qwen via LiteLLM) qui voit le code et les erreurs. Projets enregistrés sur le serveur, un par enfant.",
+  "tipi_version": 1,
+  "version": "1.0.0",
+  "source": "https://github.com/romlinch/runtipi-store/tree/main/apps/atelier-code",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1791708480758,
+  "updated_at": 1791708480758,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Clé LiteLLM",
+      "hint": "Clé virtuelle limitée au modèle ci-dessous. Elle reste côté serveur, jamais dans le navigateur.",
+      "required": true,
+      "env_variable": "ATELIER_LITELLM_KEY"
+    },
+    {
+      "type": "url",
+      "label": "URL chat completions de LiteLLM",
+      "default": "http://192.168.1.91:4000/v1/chat/completions",
+      "required": true,
+      "env_variable": "ATELIER_LITELLM_URL"
+    },
+    {
+      "type": "text",
+      "label": "Modèle",
+      "default": "qwen-nothink",
+      "required": true,
+      "env_variable": "ATELIER_MODELE"
+    }
+  ]
+}

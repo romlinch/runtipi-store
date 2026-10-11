@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier de code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+<style>
+:root {
+  --fond: #fdf6ff; --carte: #fff; --texte: #2d2440; --doux: #6b5f80; --bord: #e6dcf2;
+  --violet: #7c4dff; --violet-clair: #ede5ff; --jaune: #fff3c4; --rouge: #e53935; --vert: #2e9d4f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--fond); color: var(--texte); font: 17px/1.45 Fredoka, system-ui, sans-serif; }
+button { font: inherit; cursor: pointer; border: 0; border-radius: 12px; padding: 6px 14px; background: var(--violet-clair); color: var(--texte); }
+button:hover { filter: brightness(.95); }
+button.gros { background: var(--violet); color: #fff; font-weight: 600; font-size: 19px; padding: 8px 22px; }
+code, pre { font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 15px; }
+code { background: var(--violet-clair); padding: 1px 5px; border-radius: 6px; }
+pre { background: #f6f2fb; border: 1px solid var(--bord); border-radius: 10px; padding: 8px 10px; margin: 6px 0; white-space: pre-wrap; }
+[hidden] { display: none !important; }
+
+/* Accueil */
+#accueil { max-width: 560px; margin: 8vh auto; padding: 0 16px; text-align: center; }
+#accueil h1 { font-size: 40px; margin: 0 0 4px; }
+#profils { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 24px 0; }
+#profils button { font-size: 24px; padding: 18px 28px; background: var(--carte); border: 3px solid var(--violet); }
+#nouveau { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+#nouveau input { font: inherit; padding: 8px 12px; border: 2px solid var(--bord); border-radius: 12px; }
+
+/* Atelier */
+#atelier { display: flex; flex-direction: column; height: 100%; }
+header { display: flex; align-items: center; gap: 14px; padding: 8px 16px; background: var(--violet); color: #fff; flex-wrap: wrap; }
+header h1 { font-size: 22px; margin: 0; flex: 1; }
+header select { font: inherit; border-radius: 10px; padding: 4px 8px; border: 0; }
+#etoiles { display: flex; gap: 3px; }
+#etoiles button { padding: 0; width: 24px; height: 24px; border-radius: 50%; background: #fff3; color: #fff; font-size: 12px; }
+#etoiles button.fait { background: #ffd54f; }
+#etoiles button.ici { outline: 3px solid #fff; }
+main { flex: 1; display: grid; grid-template-columns: minmax(380px, 1fr) minmax(420px, 1.1fr); gap: 14px; padding: 14px; min-height: 0; }
+section { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+.carte { background: var(--carte); border: 2px solid var(--bord); border-radius: 16px; padding: 12px 16px; }
+#mission { max-height: 42vh; overflow: auto; }
+#mission h2 { margin: 0; font-size: 21px; flex: 1; }
+#mission .titre { display: flex; align-items: center; gap: 8px; }
+#mission p { margin: 8px 0; }
+.objectif { background: var(--jaune); border-radius: 10px; padding: 6px 10px; font-weight: 600; }
+details summary { cursor: pointer; color: var(--violet); font-weight: 600; }
+#aide td { padding: 2px 8px 2px 0; vertical-align: top; }
+#emojis { display: flex; flex-wrap: wrap; gap: 2px; }
+#emojis button { background: none; font-size: 22px; padding: 0 3px; }
+#editeur { flex: 1; min-height: 160px; border: 2px solid var(--bord); border-radius: 16px; overflow: hidden; background: #fff; }
+.CodeMirror { height: 100%; font-size: 18px; font-family: ui-monospace, "DejaVu Sans Mono", monospace; }
+.ligne-erreur { background: #ffe0e0; }
+#barre { display: flex; align-items: center; gap: 12px; }
+#erreur { color: var(--rouge); flex: 1; }
+#sauvegarde { color: var(--doux); font-size: 14px; }
+#bandeau { background: var(--jaune); border-radius: 12px; padding: 6px 12px; display: flex; align-items: center; gap: 10px; }
+#bandeau span { flex: 1; }
+#jeu { width: 100%; aspect-ratio: 8 / 5; border: 0; border-radius: 16px; background: #000; }
+#chat { flex: 1; display: flex; flex-direction: column; min-height: 180px; padding: 0; overflow: hidden; }
+#messages { flex: 1; overflow: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.bulle { max-width: 88%; padding: 8px 12px; border-radius: 14px; white-space: pre-wrap; }
+.bulle.pixel { background: var(--violet-clair); align-self: flex-start; }
+.bulle.moi { background: var(--jaune); align-self: flex-end; }
+#raccourcis { display: flex; gap: 6px; padding: 0 12px; flex-wrap: wrap; }
+#raccourcis button { font-size: 14px; padding: 3px 10px; }
+#question { display: flex; gap: 8px; padding: 10px 12px; }
+#question input { flex: 1; font: inherit; padding: 8px 12px; border: 2px solid var(--bord); border-radius: 12px; }
+
+/* Bravo */
+#bravo { position: fixed; inset: 0; background: #2d244088; display: grid; place-items: center; z-index: 10; overflow: hidden; }
+#bravo .carte { text-align: center; font-size: 30px; padding: 30px 50px; }
+.confetti { pointer-events: none; position: absolute; top: -40px; font-size: 32px; animation: tombe 2.5s linear forwards; }
+@keyframes tombe { to { transform: translateY(110vh) rotate(540deg); } }
+
+@media (max-width: 900px) { main { grid-template-columns: 1fr; } #mission { max-height: none; } }
+</style>
+</head>
+<body>
+
+<div id="accueil">
+  <h1>🚀 Atelier de code</h1>
+  <p>Qui code aujourd'hui ?</p>
+  <div id="profils"></div>
+  <form id="nouveau">
+    <input id="nouveau-nom" placeholder="Ton prénom" required maxlength="20">
+    <input id="nouveau-age" type="number" min="4" max="17" placeholder="Âge" required style="width: 90px">
+    <button class="gros">➕ C'est moi !</button>
+  </form>
+</div>
+
+<div id="atelier" hidden>
+  <header>
+    <h1>🚀 L'atelier de code de <span id="qui"></span></h1>
+    <div id="etoiles"></div>
+    <select id="visiter"><option value="">👀 Jouer au jeu de…</option></select>
+    <button id="changer">🔄 Changer</button>
+  </header>
+  <main>
+    <section>
+      <div id="mission" class="carte">
+        <div class="titre">
+          <button id="precedente" title="Mission précédente">◀</button>
+          <h2 id="mission-titre"></h2>
+          <button id="suivante" title="Mission suivante">▶</button>
+        </div>
+        <p id="mission-texte"></p>
+        <p class="objectif">🎯 <span id="mission-objectif"></span></p>
+        <details id="mission-indice"><summary>💡 Un indice</summary><pre></pre></details>
+        <details><summary>📖 Aide-mémoire</summary><table id="aide"></table></details>
+        <details><summary>🇬🇧 Les mots anglais du code</summary><table id="mots"></table></details>
+      </div>
+      <div id="emojis"></div>
+      <div id="editeur"></div>
+      <div id="barre">
+        <button id="lancer" class="gros">▶ Lancer</button>
+        <span id="erreur"></span>
+        <span id="sauvegarde"></span>
+      </div>
+    </section>
+    <section>
+      <div id="bandeau" hidden><span></span><button id="retour">↩ Revenir à mon jeu</button></div>
+      <iframe id="jeu" sandbox="allow-scripts" title="Ton jeu"></iframe>
+      <div id="chat" class="carte">
+        <div id="messages"></div>
+        <div id="raccourcis">
+          <button>🤔 Aide-moi</button>
+          <button>😬 Explique l'erreur</button>
+          <button>✅ Est-ce que j'ai réussi ?</button>
+        </div>
+        <form id="question">
+          <input id="question-texte" placeholder="Pose ta question à Pixel 🤖" autocomplete="off">
+          <button class="gros">Envoyer</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="bravo" hidden><div class="carte">🎉 Mission réussie ! 🎉<br><button class="gros" id="bravo-suite">Mission suivante ➜</button></div></div>
+
+<script>
+// ---------- Ce que les enfants peuvent utiliser dans leur jeu ----------
+
+const AIDE = [
+  ['fond("bleu")', "peint tout l'écran"],
+  ['emoji("🦄", x, y, taille)', "dessine un emoji, centré sur x et y (taille 50 si tu ne mets rien)"],
+  ['texte("Bonjour", x, y, taille, "blanc")', "écrit du texte (x et y = son coin en haut à gauche)"],
+  ['rond(x, y, rayon, "rouge")', "dessine un rond"],
+  ['rectangle(x, y, largeur, hauteur, "vert")', "dessine un rectangle"],
+  ['touche("droite")', 'vrai si la touche est enfoncée : "gauche", "droite", "haut", "bas", "espace" ou une lettre comme "a"'],
+  ['auHasard(1, 10)', "un nombre surprise entre 1 et 10"],
+  ['distance(x1, y1, x2, y2)', "l'écart entre deux points"],
+  ['son(440)', "un bip (plus le nombre est grand, plus c'est aigu)"],
+  ['LARGEUR et HAUTEUR', "la taille de l'écran : 800 et 500. x va de gauche à droite, y de haut en bas"],
+  ['function dessiner() { }', "si elle existe, l'ordinateur la lance 60 fois par seconde : c'est ce qui anime le jeu"],
+];
+// Les mots du JavaScript sont en anglais : leur sens en français (aide-mémoire, survol dans l'éditeur, Pixel).
+const MOTS = {
+  let: "« soit » : fabrique une boîte (une variable)", const: "« constante » : une boîte qui ne changera jamais",
+  if: "« si »", else: "« sinon »", function: "« fonction » : une recette, une liste d'ordres avec un nom",
+  return: "« retourne » : arrête la fonction ici", for: "« pour » : une boucle qui répète des ordres",
+  of: "« de » : chaque élément de…", true: "« vrai »", false: "« faux »", push: "« pousser » : ajoute au bout du tableau",
+  length: "« longueur » : combien il y a d'éléments", Math: "les maths", while: "« tant que » : répète tant que c'est vrai",
+};
+const COULEURS = "rouge, bleu, vert, jaune, rose, violet, orange, noir, blanc, gris, marron, ciel, nuit";
+
+// Tourne DANS l'iframe du jeu : c'est la petite bibliothèque française des enfants.
+function runtime(DECALAGE) {
+  const ctx = document.getElementById('c').getContext('2d');
+  const PALETTE = { rouge: '#e53935', bleu: '#1e88e5', vert: '#43a047', jaune: '#fdd835', rose: '#f06292', violet: '#8e24aa',
+    orange: '#fb8c00', noir: '#000', blanc: '#fff', gris: '#9e9e9e', marron: '#6d4c41', ciel: '#81d4fa', nuit: '#1a237e' };
+  const couleur = c => PALETTE[c] || c;
+  const NOMS = { gauche: 'arrowleft', droite: 'arrowright', haut: 'arrowup', bas: 'arrowdown', espace: ' ', entree: 'enter' };
+  const enfoncees = new Set();
+  let audio, arrete = false;
+
+  Object.assign(window, {
+    LARGEUR: 800, HAUTEUR: 500,
+    fond(c) { ctx.fillStyle = couleur(c); ctx.fillRect(0, 0, 800, 500); },
+    emoji(e, x, y, taille = 50) { ctx.font = taille + 'px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(e, x, y); },
+    texte(t, x, y, taille = 30, c = 'blanc') { ctx.font = 'bold ' + taille + 'px sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = couleur(c); ctx.fillText(t, x, y); },
+    rond(x, y, rayon, c = 'blanc') { ctx.fillStyle = couleur(c); ctx.beginPath(); ctx.arc(x, y, rayon, 0, 2 * Math.PI); ctx.fill(); },
+    rectangle(x, y, largeur, hauteur, c = 'blanc') { ctx.fillStyle = couleur(c); ctx.fillRect(x, y, largeur, hauteur); },
+    touche: nom => enfoncees.has(NOMS[nom] || String(nom).toLowerCase()),
+    auHasard: (min, max) => Math.floor(min + Math.random() * (max - min + 1)),
+    distance: (x1, y1, x2, y2) => Math.hypot(x2 - x1, y2 - y1),
+    son(note = 440, duree = 0.15) {
+      audio ??= new AudioContext();
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.frequency.value = note;
+      g.gain.setValueAtTime(0.2, audio.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + duree);
+      o.connect(g).connect(audio.destination);
+      o.start(); o.stop(audio.currentTime + duree);
+    },
+  });
+
+  addEventListener('keydown', e => { enfoncees.add(e.key.toLowerCase()); if (e.key.startsWith('Arrow') || e.key === ' ') e.preventDefault(); });
+  addEventListener('keyup', e => enfoncees.delete(e.key.toLowerCase()));
+  addEventListener('focus', () => document.body.classList.add('actif'));
+  addEventListener('blur', () => { document.body.classList.remove('actif'); enfoncees.clear(); });
+  addEventListener('pointerdown', () => focus());
+  document.body.classList.toggle('actif', document.hasFocus());
+
+  // Une erreur arrête le jeu (sinon elle se répéterait 60 fois par seconde) et part vers l'atelier.
+  window.onerror = (message, source, ligne) => {
+    arrete = true;
+    parent.postMessage({ type: 'erreur', message: String(message), ligne: ligne - DECALAGE }, '*');
+  };
+  function boucle() {
+    if (arrete) return;
+    requestAnimationFrame(boucle);
+    if (typeof dessiner === 'function') dessiner();
+  }
+  window.__demarrer = () => {
+    requestAnimationFrame(boucle);
+    requestAnimationFrame(() => requestAnimationFrame(() => { if (!arrete) parent.postMessage({ type: 'pret' }, '*'); }));
+  };
+}
+
+// Le code de l'enfant est collé juste après AVANT : DECALAGE convertit les numéros de ligne du document en lignes de l'éditeur.
+const AVANT_MODELE = `<!doctype html><html><head><meta charset="utf-8"><style>
+html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+canvas { width: 100%; height: 100%; object-fit: contain; display: block; }
+body::after { content: "🎮 Clique ici pour jouer"; position: fixed; bottom: 8px; right: 8px; font: bold 14px sans-serif; color: #fff; background: #0009; padding: 4px 10px; border-radius: 12px; }
+body.actif::after { display: none; }
+</style></head><body><canvas id="c" width="800" height="500"></canvas><script>(${runtime})(DECALAGE_ICI)<\/script><script>
+`;
+const AVANT = AVANT_MODELE.replace('DECALAGE_ICI', AVANT_MODELE.split('\n').length - 1);
+
+// ---------- Les missions : le jeu final se construit petit à petit ----------
+
+const DEMO = `// 🦄 Attrape les fraises, fuis le fantôme !
+let x = 400
+let y = 250
+let fx = auHasard(50, 750)
+let fy = auHasard(50, 450)
+let gx = 50
+let gy = 50
+let score = 0
+let perdu = false
+let etoiles = []
+for (let i = 0; i < 40; i++) {
+  etoiles.push({ x: auHasard(0, LARGEUR), y: auHasard(0, HAUTEUR) })
+}
+
+function dessiner() {
+  fond("nuit")
+  for (const e of etoiles) {
+    rond(e.x, e.y, 2, "blanc")
+    e.y = e.y + 1
+    if (e.y > HAUTEUR) { e.y = 0 }
+  }
+
+  if (perdu) {
+    texte("PERDU ! Score : " + score, 220, 190, 50, "rouge")
+    texte("Appuie sur espace pour rejouer", 190, 260)
+    if (touche("espace")) {
+      perdu = false
+      score = 0
+      gx = 50
+      gy = 50
+    }
+    return
+  }
+
+  if (touche("droite")) { x = x + 5 }
+  if (touche("gauche")) { x = x - 5 }
+  if (touche("haut")) { y = y - 5 }
+  if (touche("bas")) { y = y + 5 }
+  if (x > LARGEUR) { x = 0 }
+  if (x < 0) { x = LARGEUR }
+  if (y > HAUTEUR) { y = 0 }
+  if (y < 0) { y = HAUTEUR }
+
+  if (distance(x, y, fx, fy) < 50) {
+    score = score + 1
+    fx = auHasard(50, 750)
+    fy = auHasard(50, 450)
+    son(880)
+  }
+
+  let vitesse = 1 + score / 5
+  if (gx < x) { gx = gx + vitesse } else { gx = gx - vitesse }
+  if (gy < y) { gy = gy + vitesse } else { gy = gy - vitesse }
+  if (distance(x, y, gx, gy) < 40) {
+    perdu = true
+    son(150, 0.6)
+  }
+
+  emoji("🍓", fx, fy, 40)
+  emoji("👻", gx, gy, 50)
+  emoji("🦄", x, y, 60)
+  texte("Score : " + score, 20, 20)
+}
+`;
+
+const nbEmojis = c => (c.match(/emoji\s*\(/g) || []).length;
+const MISSIONS = [
+  { titre: "🎬 Le grand défi", demo: true,
+    texte: "Regarde ce jeu ! Une licorne attrape des fraises et fuit un fantôme. Clique dessus et joue avec les flèches ⬅️➡️⬆️⬇️.<br><b>Ce jeu, c'est TOI qui vas le fabriquer</b>, ligne après ligne, mission après mission. Prête ?",
+    objectif: "Joue au jeu, puis clique sur la flèche ▶ à côté du titre pour commencer." },
+  { titre: "🎨 Allume l'écran",
+    texte: "Un programme, c'est une liste d'ordres pour l'ordinateur. Ton premier ordre : peindre l'écran ! Écris <code>fond(\"bleu\")</code> dans l'éditeur, puis clique sur ▶ Lancer.",
+    objectif: "Peins l'écran avec la couleur de ton choix.",
+    indice: 'fond("rose")', check: c => /fond\s*\(/.test(c) },
+  { titre: "🦄 Ton héros",
+    texte: "Chaque jeu a un héros. Le tien sera un emoji ! <code>emoji(\"🦄\", 400, 250, 80)</code> dessine une licorne. Les nombres disent <b>où</b> : 400 pas vers la droite, 250 pas vers le bas. Le dernier, 80, c'est la taille. Clique sur les emojis au-dessus de l'éditeur pour en choisir un autre.",
+    objectif: "Dessine ton héros au milieu de l'écran.",
+    indice: 'fond("ciel")\nemoji("🦄", 400, 250, 80)', check: c => /emoji\s*\(/.test(c) },
+  { titre: "✏️ Signe ton jeu",
+    texte: "<code>texte(\"Le jeu de Léa\", 20, 20)</code> écrit en haut à gauche. Les guillemets <code>\" \"</code> disent à l'ordinateur : ça, ce sont des mots à écrire, pas des ordres.",
+    objectif: "Écris le nom de ton jeu sur l'écran.",
+    indice: 'texte("Le jeu de Léa", 20, 20)', check: c => /texte\s*\(/.test(c) },
+  { titre: "📦 La boîte magique",
+    texte: "Une <b>variable</b>, c'est une boîte avec un nom, qui garde un nombre. <code>let x = 400</code> fabrique une boîte « x » avec 400 dedans (<code>let</code> est un mot anglais qui veut dire « soit »). Ensuite, écris <code>x</code> à la place de 400 dans <code>emoji(...)</code>. Change le nombre dans la boîte et relance : le héros bouge !",
+    objectif: "Crée la boîte x et utilise-la pour placer ton héros.",
+    indice: 'let x = 400\nemoji("🦄", x, 250, 80)', check: c => /let\s+x\s*=/.test(c) && /emoji\s*\([^)]*,\s*x\s*,/.test(c) },
+  { titre: "🎞️ Ça bouge !",
+    texte: "Un dessin animé, c'est plein d'images qui changent très vite. Si tu écris une <b>fonction</b> (<code>function</code> en anglais) qui s'appelle <code>dessiner</code>, l'ordinateur la lance 60 fois par seconde ! Mets dedans le fond, ton héros, et <code>x = x + 2</code> : à chaque image, la boîte x grandit un peu, donc le héros avance.",
+    objectif: "Fais avancer ton héros tout seul.",
+    indice: 'let x = 0\n\nfunction dessiner() {\n  fond("ciel")\n  emoji("🦄", x, 250, 80)\n  x = x + 2\n}',
+    check: c => /function\s+dessiner/.test(c) && /x\s*(=\s*x\s*[+-]|\+=|-=|\+\+|--)/.test(c) },
+  { titre: "🕹️ Aux commandes",
+    texte: "Maintenant, c'est toi qui conduis ! <code>if</code> veut dire <b>si</b>. <code>if (touche(\"droite\")) { x = x + 5 }</code> veut dire : SI la flèche droite est enfoncée, ALORS avance de 5. Fais pareil pour la gauche, et enlève le <code>x = x + 2</code> d'avant.",
+    objectif: "Déplace ton héros à gauche et à droite avec les flèches.",
+    indice: 'if (touche("droite")) { x = x + 5 }', check: c => /touche\s*\(\s*["']droite/.test(c) && /touche\s*\(\s*["']gauche/.test(c) },
+  { titre: "⬆️ Haut et bas",
+    texte: "Pour monter et descendre, il te faut une deuxième boîte : <code>let y = 250</code>. Mets <code>y</code> dans <code>emoji(...)</code> et ajoute les touches \"haut\" et \"bas\". Attention : pour monter, on <b>enlève</b> !",
+    objectif: "Déplace ton héros dans les 4 directions.",
+    indice: 'if (touche("haut")) { y = y - 5 }', check: c => /let\s+y\s*=/.test(c) && /["']haut["']/.test(c) && /["']bas["']/.test(c) },
+  { titre: "🌀 Le passage secret",
+    texte: "Ton héros peut sortir de l'écran… et se perdre ! Fais-le revenir de l'autre côté : <code>if (x > LARGEUR) { x = 0 }</code>. LARGEUR, c'est la largeur de l'écran. Il faut 4 règles : à droite, à gauche (<code>x < 0</code>), en bas (avec HAUTEUR) et en haut.",
+    objectif: "Quand ton héros sort d'un côté, il revient de l'autre.",
+    indice: 'if (x > LARGEUR) { x = 0 }\nif (x < 0) { x = LARGEUR }', check: c => /if\s*\(\s*x\s*[<>]/.test(c) && /if\s*\(\s*y\s*[<>]/.test(c) },
+  { titre: "🍓 Le trésor",
+    texte: "Ajoute une fraise à attraper, cachée à un endroit surprise ! <code>auHasard(50, 750)</code> donne un nombre au hasard entre 50 et 750. Range-le dans une boîte <code>fx</code> (f comme fraise), fais pareil pour <code>fy</code>, puis dessine la fraise dans <code>dessiner()</code>.",
+    objectif: "Une fraise apparaît à un endroit différent à chaque lancement.",
+    indice: 'let fx = auHasard(50, 750)\nlet fy = auHasard(50, 450)', check: c => /auHasard\s*\(/.test(c) && nbEmojis(c) >= 2 },
+  { titre: "😋 Miam !",
+    texte: "Quand le héros touche la fraise : +1 point, et la fraise saute ailleurs. <code>distance(x, y, fx, fy)</code> mesure l'écart entre les deux : s'il est plus petit que 50, ils se touchent ! Crée une boîte <code>score</code> qui commence à 0 et affiche-la avec <code>texte(\"Score : \" + score, 20, 20)</code>. Bonus : <code>son(880)</code> fait un bip !",
+    objectif: "Attrape la fraise pour gagner des points.",
+    indice: 'if (distance(x, y, fx, fy) < 50) {\n  score = score + 1\n  fx = auHasard(50, 750)\n}', check: c => /distance\s*\(/.test(c) && /score/.test(c) },
+  { titre: "👻 Le fantôme",
+    texte: "Un jeu sans danger, c'est trop facile ! Ajoute un fantôme avec ses boîtes <code>gx</code> et <code>gy</code>. À chaque image, il se rapproche : <b>si</b> gx est plus petit que x, il va vers la droite, <b>sinon</b> vers la gauche. <code>else</code> veut dire « sinon ».",
+    objectif: "Le fantôme poursuit ton héros.",
+    indice: 'if (gx < x) { gx = gx + 1 } else { gx = gx - 1 }', check: c => /\belse\b/.test(c) && nbEmojis(c) >= 3 },
+  { titre: "💥 Game over",
+    texte: "Si le fantôme t'attrape, c'est perdu ! Une boîte peut aussi contenir <code>true</code> (vrai) ou <code>false</code> (faux). Crée <code>let perdu = false</code>. Quand le fantôme te touche : <code>perdu = true</code>. Au début de <code>dessiner()</code>, si perdu est vrai, écris « PERDU ! » puis <code>return</code> (« retourne » en anglais) : ça arrête l'image ici. Bonus : rejouer avec la touche espace !",
+    objectif: "Le jeu s'arrête quand le fantôme t'attrape.",
+    indice: 'if (perdu) {\n  texte("PERDU !", 300, 220, 60, "rouge")\n  return\n}', check: c => /perdu\s*=\s*true/.test(c) && /\breturn\b/.test(c) },
+  { titre: "✨ Pluie d'étoiles",
+    texte: "Pour 40 étoiles, tu ne vas pas créer 80 boîtes ! Un <b>tableau</b> <code>[]</code> est une boîte qui contient plein de choses. Une <b>boucle</b> <code>for</code> (« pour » en anglais) répète des ordres, et <code>push</code> (« pousser ») ajoute une étoile au bout du tableau. Une boucle pour fabriquer les étoiles, une autre pour les dessiner et les faire tomber.",
+    objectif: "Un ciel plein d'étoiles qui défilent derrière ton jeu.",
+    indice: 'let etoiles = []\nfor (let i = 0; i < 40; i++) {\n  etoiles.push({ x: auHasard(0, LARGEUR), y: auHasard(0, HAUTEUR) })\n}\n\n// dans dessiner(), juste après fond(...) :\nfor (const e of etoiles) {\n  rond(e.x, e.y, 2, "blanc")\n  e.y = e.y + 1\n}',
+    check: c => /\bfor\s*\(/.test(c) && /\.push\s*\(/.test(c) },
+  { titre: "🏆 Ton jeu à toi !",
+    texte: "Bravo, tu as fabriqué un vrai jeu vidéo ! 🎉 Maintenant, invente : le fantôme va plus vite quand le score monte ? Un deuxième fantôme ? Une fraise dorée qui vaut 5 points ? Des niveaux ? Demande des idées à Pixel, et fais jouer ta famille avec « 👀 Jouer au jeu de… ».",
+    objectif: "Ajoute ta propre idée au jeu." },
+];
+
+const EMOJIS = "🦄 🐱 🐶 🐰 🦊 🐼 🐸 🐵 🦖 🐉 🧚 👸 🤖 👽 🚀 🚗 🍓 🍎 🍌 🍒 🍩 🍪 ⭐ 💎 🪙 ❤️ 👻 👾 🐝 🕷️ 💣 🔥 🌈 ☁️ 🌳 🏰".split(' ');
+
+// Messages d'erreur du navigateur → phrases pour enfants. Le message brut part quand même à Pixel.
+const ERREURS = [
+  [/(\S+) is not defined/i, m => `je ne connais pas le mot « ${m[1]} ». Vérifie l'orthographe !`],
+  [/already been declared|redeclaration/i, () => "cette boîte existe déjà : enlève le deuxième let."],
+  [/is not a function/i, () => "ce n'est pas un ordre que je connais."],
+  [/constant variable|invalid assignment to const/i, () => "une boîte « const » ne peut pas changer : utilise « let »."],
+  [/before initialization|can't access lexical/i, () => "tu utilises une boîte avant de l'avoir fabriquée avec « let »."],
+  [/of undefined|of null|is undefined|is null/i, () => "cette boîte est vide (undefined = « pas défini »)."],
+  [/end of input|missing \)|missing \}|\bexpected/i, () => "il manque une parenthèse ) ou une accolade }."],
+  [/invalid or unexpected token|unterminated string|string literal/i, () => "un guillemet \" n'est pas fermé ?"],
+  [/unexpected/i, () => "il y a un signe en trop ou mal placé."],
+];
+
+// ---------- L'atelier ----------
+
+const $ = id => document.getElementById(id);
+const jeu = $('jeu');
+let moi = null;           // { id, nom, age, mission, reussies, code }
+let derniereErreur = null; // { ligne, message }
+let codeLance = '';        // la mission se vérifie sur le code qui tourne, pas sur l'éditeur
+let historique = [];      // conversation avec Pixel, sans le contexte
+let minuteur;
+let projets = [];         // tous les profils, pour « Jouer au jeu de… »
+
+const editeur = CodeMirror($('editeur'), {
+  mode: 'javascript', lineNumbers: true, tabSize: 2, indentUnit: 2, matchBrackets: true, autoCloseBrackets: true,
+  extraKeys: { 'Ctrl-Enter': lancerMonCode, 'Cmd-Enter': lancerMonCode },
+});
+editeur.on('change', () => { clearTimeout(minuteur); minuteur = setTimeout(sauver, 800); });
+// Survoler un mot anglais (if, let…) affiche sa traduction.
+editeur.getWrapperElement().addEventListener('mousemove', e => {
+  const mot = editeur.getTokenAt(editeur.coordsChar({ left: e.clientX, top: e.clientY })).string;
+  e.target.title = Object.hasOwn(MOTS, mot) ? `${mot} = ${MOTS[mot]}` : '';
+});
+
+async function chargerProjets() {
+  const r = await fetch('/api/projets');
+  return r.json();
+}
+
+async function sauver(enPartant = false) {
+  if (!moi) return;
+  clearTimeout(minuteur);
+  moi.code = editeur.getValue();
+  const { id, ...projet } = moi;
+  try {
+    const r = await fetch('/api/projets/' + id, { method: 'PUT', keepalive: enPartant, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(projet) });
+    $('sauvegarde').textContent = r.ok ? '' : '⚠️ pas sauvegardé';
+  } catch {
+    $('sauvegarde').textContent = '⚠️ pas sauvegardé';
+  }
+}
+addEventListener('pagehide', () => sauver(true));
+
+function lancer(code, jouer) {
+  codeLance = code;
+  derniereErreur = null;
+  $('erreur').textContent = '';
+  editeur.eachLine(l => editeur.removeLineClass(l, 'background', 'ligne-erreur'));
+  jeu.onload = () => jouer && jeu.focus();
+  jeu.srcdoc = AVANT + code.replace(/<\/script/gi, '<\\/script') + '\n<\/script><script>__demarrer()<\/script></body></html>';
+}
+
+function lancerMonCode() {
+  $('bandeau').hidden = true;
+  $('visiter').value = '';
+  lancer(editeur.getValue(), true);
+}
+
+addEventListener('message', e => {
+  if (e.source !== jeu.contentWindow || $('bandeau').hidden === false) return;
+  if (e.data.type === 'erreur') {
+    derniereErreur = e.data;
+    const regle = ERREURS.find(([re]) => re.test(e.data.message));
+    const explication = regle ? regle[1](e.data.message.match(regle[0])) : e.data.message;
+    $('erreur').textContent = `😬 Ligne ${e.data.ligne} : ${explication}`;
+    if (e.data.ligne >= 1 && e.data.ligne <= editeur.lineCount()) editeur.addLineClass(e.data.ligne - 1, 'background', 'ligne-erreur');
+  }
+  if (e.data.type === 'pret') verifierMission();
+});
+
+function verifierMission() {
+  const m = MISSIONS[moi.mission];
+  if (!m.check || moi.reussies.includes(moi.mission) || !m.check(codeLance)) return;
+  moi.reussies.push(moi.mission);
+  sauver();
+  afficherEtoiles();
+  bravo();
+}
+
+function bravo() {
+  const b = $('bravo');
+  b.querySelectorAll('.confetti').forEach(c => c.remove());
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.textContent = ['🎉', '⭐', '✨', '🎊', '💜'][i % 5];
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.animationDelay = Math.random() * 1.2 + 's';
+    b.append(c);
+  }
+  b.hidden = false;
+}
+$('bravo-suite').onclick = () => { $('bravo').hidden = true; allerA(moi.mission + 1); };
+
+function allerA(n) {
+  moi.mission = Math.max(0, Math.min(MISSIONS.length - 1, n));
+  afficherMission();
+  sauver();
+}
+
+function afficherMission() {
+  const m = MISSIONS[moi.mission];
+  $('mission-titre').textContent = `Mission ${moi.mission} / ${MISSIONS.length - 1} — ${m.titre}`;
+  $('mission-texte').innerHTML = m.texte;
+  $('mission-objectif').textContent = m.objectif;
+  $('mission-indice').hidden = !m.indice;
+  $('mission-indice').open = false;
+  $('mission-indice').querySelector('pre').textContent = m.indice || '';
+  $('precedente').disabled = moi.mission === 0;
+  $('suivante').disabled = moi.mission === MISSIONS.length - 1;
+  afficherEtoiles();
+  if (m.demo) {
+    lancer(DEMO);
+    $('bandeau').hidden = false;
+    $('bandeau').querySelector('span').textContent = "🎬 Voici le jeu que tu vas créer !";
+  } else if (!$('bandeau').hidden) {
+    lancerMonCode();
+  }
+}
+$('precedente').onclick = () => allerA(moi.mission - 1);
+$('suivante').onclick = () => {
+  if (MISSIONS[moi.mission].demo && !moi.reussies.includes(moi.mission)) moi.reussies.push(moi.mission);
+  allerA(moi.mission + 1);
+};
+
+function afficherEtoiles() {
+  $('etoiles').replaceChildren(...MISSIONS.map((m, i) => {
+    const b = document.createElement('button');
+    b.textContent = moi.reussies.includes(i) ? '⭐' : i;
+    b.title = m.titre;
+    b.className = (moi.reussies.includes(i) ? 'fait ' : '') + (i === moi.mission ? 'ici' : '');
+    b.onclick = () => allerA(i);
+    return b;
+  }));
+}
+
+// ---------- Pixel, l'assistant (Qwen via le serveur) ----------
+
+function systeme() {
+  return `Tu es Pixel 🤖, le robot qui aide ${moi.nom} (${moi.age} ans) à apprendre le JavaScript en créant son propre jeu vidéo dans l'« atelier de code ».
+
+Comment tu parles :
+- Tu tutoies, tu es gentil, enthousiaste et patient. Tu félicites les efforts, pas seulement les réussites.
+- Phrases très courtes et mots simples, pour un enfant de ${moi.age} ans. 2 à 6 phrases maximum.
+- Pas de titres, pas de tableaux, pas de listes longues. Le code va entre \`\`\` et \`\`\`.
+
+Comment tu aides :
+- Tu ne donnes JAMAIS la solution complète d'une mission. Tu donnes un indice, tu poses une question qui fait réfléchir, ou tu montres au maximum UNE ou DEUX lignes d'exemple.
+- S'il y a une erreur, explique avec des mots simples ce qu'elle veut dire et dis à quelle ligne regarder.
+- Si l'enfant est bloqué après plusieurs essais, tu peux montrer un peu plus, toujours en expliquant.
+- Tu vois toujours la mission, le code actuel et la dernière erreur (bloc « Ce que Pixel voit »). Sers-t'en, ne demande jamais de recopier le code.
+- L'enfant écrit en JavaScript sans point-virgule, c'est voulu : ne les réclame pas.
+- L'enfant ne parle pas anglais mais lit très bien le français. Chaque fois que tu utilises un mot anglais du JavaScript (let, if, else, function, return, for…), donne son sens en français. Ne recopie jamais un message d'erreur en anglais : traduis-le et explique-le.
+
+Les mots anglais du JavaScript :
+${Object.entries(MOTS).map(([mot, sens]) => `- ${mot} = ${sens}`).join('\n')}
+- Si on te parle d'autre chose que le code, le jeu ou l'ordinateur, réponds en une phrase gentille et ramène vers le jeu. Jamais de sujet pour adultes.
+
+Les outils de l'atelier (en plus du JavaScript normal) :
+${AIDE.map(([code, explication]) => `- ${code} : ${explication}`).join('\n')}
+Couleurs en français : ${COULEURS}, ou un code comme "#ff8800".`;
+}
+
+function contexte() {
+  const m = MISSIONS[moi.mission];
+  const code = editeur.getValue().split('\n').map((l, i) => `${i + 1}| ${l}`).join('\n');
+  const texte = m.texte.replace(/<[^>]+>/g, '');
+  return `[Ce que Pixel voit]
+Mission ${moi.mission} : ${m.titre}
+Explication montrée à l'enfant : ${texte}
+Objectif : ${m.objectif}${m.indice ? `\nIndice prévu (ne pas tout donner d'un coup) :\n${m.indice}` : ''}
+Mission déjà réussie : ${moi.reussies.includes(moi.mission) ? 'oui' : 'non'}
+Code actuel :
+\`\`\`
+${code}
+\`\`\`
+Dernière erreur : ${derniereErreur ? `ligne ${derniereErreur.ligne} : ${derniereErreur.message}` : 'aucune'}`;
+}
+
+function joli(t) {
+  return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c])
+    .replace(/```\w*\n?([\s\S]*?)(```|$)/g, (_, code) => `<pre>${code.trimEnd()}</pre>`)
+    .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
+
+function bulle(qui, texte) {
+  const b = document.createElement('div');
+  b.className = 'bulle ' + qui;
+  b.innerHTML = joli(texte);
+  $('messages').append(b);
+  $('messages').scrollTop = $('messages').scrollHeight;
+  return b;
+}
+
+async function demander(question) {
+  bulle('moi', question);
+  const messages = [
+    { role: 'system', content: systeme() },
+    ...historique.slice(-10),
+    { role: 'user', content: `${contexte()}\n\nQuestion de ${moi.nom} : ${question}` },
+  ];
+  historique.push({ role: 'user', content: question });
+  const b = bulle('pixel', '🤔…');
+  let reponse = '';
+  try {
+    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages }) });
+    if (!r.ok) throw new Error(await r.text());
+    const lecteur = r.body.pipeThrough(new TextDecoderStream()).getReader();
+    let tampon = '';
+    for (;;) {
+      const { value, done } = await lecteur.read();
+      if (done) break;
+      tampon += value;
+      const lignes = tampon.split('\n');
+      tampon = lignes.pop();
+      for (const l of lignes) {
+        if (!l.startsWith('data: ') || l === 'data: [DONE]') continue;
+        reponse += JSON.parse(l.slice(6)).choices?.[0]?.delta?.content ?? '';
+        b.innerHTML = joli(reponse);
+        $('messages').scrollTop = $('messages').scrollHeight;
+      }
+    }
+  } catch (e) {
+    b.textContent = "😵 Oups, mon cerveau ne répond pas. Réessaie dans une minute ! (" + e.message + ")";
+    historique.pop();
+    return;
+  }
+  historique.push({ role: 'assistant', content: reponse });
+}
+
+$('question').onsubmit = e => {
+  e.preventDefault();
+  const q = $('question-texte').value.trim();
+  if (!q) return;
+  $('question-texte').value = '';
+  demander(q);
+};
+$('raccourcis').onclick = e => { if (e.target.tagName === 'BUTTON') demander(e.target.textContent.replace(/^\S+\s/, '')); };
+
+// ---------- Profils, visites, démarrage ----------
+
+$('lancer').onclick = lancerMonCode;
+$('retour').onclick = lancerMonCode;
+$('changer').onclick = () => { sauver(); try { localStorage.removeItem('atelier-moi'); } catch {} location.reload(); };
+
+$('emojis').replaceChildren(...EMOJIS.map(e => {
+  const b = document.createElement('button');
+  b.textContent = e;
+  b.onclick = () => { editeur.replaceSelection(e); editeur.focus(); };
+  return b;
+}));
+$('mots').replaceChildren(...Object.entries(MOTS).map(([mot, sens]) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><code></code></td><td></td>`;
+  tr.querySelector('code').textContent = mot;
+  tr.lastChild.textContent = sens;
+  return tr;
+}));
+$('aide').replaceChildren(...AIDE.map(([code, explication]) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><code></code></td><td></td>`;
+  tr.querySelector('code').textContent = code;
+  tr.lastChild.textContent = explication;
+  return tr;
+}));
+
+$('visiter').onchange = async () => {
+  const id = $('visiter').value;
+  if (!id) return lancerMonCode();
+  const autre = (await chargerProjets()).find(p => p.id === id);
+  lancer(autre.code || '', true);
+  $('bandeau').hidden = false;
+  $('bandeau').querySelector('span').textContent = `👀 Tu joues au jeu de ${autre.nom}`;
+};
+
+function ouvrir(projet) {
+  moi = { mission: 0, reussies: [], code: '// Ton code commence ici 👇\n', ...projet };
+  try { localStorage.setItem('atelier-moi', moi.id); } catch {}
+  $('accueil').hidden = true;
+  $('atelier').hidden = false;
+  $('qui').textContent = moi.nom;
+  for (const p of projets) if (p.id !== moi.id) $('visiter').add(new Option(p.nom, p.id));
+  editeur.setValue(moi.code);
+  editeur.refresh();
+  afficherMission();
+  if (!MISSIONS[moi.mission].demo) lancerMonCode();
+  bulle('pixel', `Coucou ${moi.nom} ! Je suis Pixel 🤖. Je vois ton code et tes erreurs. Si tu es bloquée, pose-moi une question !`);
+}
+
+async function demarrer() {
+  projets = await chargerProjets();
+  let dernier = null;
+  try { dernier = localStorage.getItem('atelier-moi'); } catch {}
+  const moiAvant = projets.find(p => p.id === dernier);
+  if (moiAvant) ouvrir(moiAvant);
+  $('profils').replaceChildren(...projets.map(p => {
+    const b = document.createElement('button');
+    b.textContent = p.nom;
+    b.onclick = () => ouvrir(p);
+    return b;
+  }));
+}
+
+$('nouveau').onsubmit = async e => {
+  e.preventDefault();
+  const nom = $('nouveau-nom').value.trim();
+  const id = nom.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
+  if (!id) return;
+  const existant = projets.find(p => p.id === id);
+  ouvrir(existant || { id, nom, age: Number($('nouveau-age').value) });
+  sauver();
+};
+
+demarrer();
+</script>
+</body>
+</html>

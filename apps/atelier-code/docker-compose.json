@@ -1,0 +1,24 @@
+{
+  "services": [
+    {
+      "name": "atelier-code",
+      "image": "python:3.13-alpine",
+      "isMain": true,
+      "internalPort": "8000",
+      "command": ["python", "/app/server.py"],
+      "environment": {
+        "LITELLM_KEY": "${ATELIER_LITELLM_KEY}",
+        "LITELLM_URL": "${ATELIER_LITELLM_URL}",
+        "MODELE": "${ATELIER_MODELE}",
+        "PROJETS_DIR": "/app/projets",
+        "PYTHONUNBUFFERED": "1"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/app"
+        }
+      ]
+    }
+  ]
+}
