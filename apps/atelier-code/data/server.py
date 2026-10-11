@@ -9,6 +9,7 @@ La clé LiteLLM reste ici, jamais dans le navigateur. Le modèle est imposé cô
 import json
 import os
 import re
+import unicodedata
 import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -83,6 +84,17 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(corps)
 
 
+def creer_profils(prenoms):
+    """Crée les profils manquants (sans âge : la page le demande à la première ouverture)."""
+    PROJETS.mkdir(parents=True, exist_ok=True)
+    for nom in filter(None, (n.strip() for n in prenoms.split(","))):
+        # même identifiant que la page : sans accents, minuscules, tirets
+        id_ = re.sub(r"[^a-z0-9]+", "-", unicodedata.normalize("NFKD", nom).encode("ascii", "ignore").decode().lower()).strip("-")[:30]
+        if id_ and not (PROJETS / f"{id_}.json").exists():
+            (PROJETS / f"{id_}.json").write_text(json.dumps({"nom": nom}, ensure_ascii=False))
+
+
 if __name__ == "__main__":
+    creer_profils(os.environ.get("PRENOMS", ""))
     print(f"Atelier de code sur :{PORT}, projets dans {PROJETS}, modèle {MODELE}", flush=True)
     ThreadingHTTPServer(("", PORT), Handler).serve_forever()

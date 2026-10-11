@@ -42,6 +42,13 @@
       "default": "qwen-nothink",
       "required": true,
       "env_variable": "ATELIER_MODELE"
+    },
+    {
+      "type": "text",
+      "label": "Prénoms",
+      "hint": "Profils créés au démarrage s'ils n'existent pas, séparés par des virgules (ex. Alice,Paul). D'autres enfants peuvent s'ajouter depuis la page.",
+      "required": false,
+      "env_variable": "ATELIER_PRENOMS"
     }
   ]
 }
