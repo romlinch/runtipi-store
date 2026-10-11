@@ -22,7 +22,7 @@ const updateAppConfig = async (packageFile: string, newVersion: string) => {
     configParsed.version = newVersion;
     configParsed.updated_at = new Date().getTime();
 
-    await fs.writeFile(configPath, JSON.stringify(configParsed, null, 2));
+    await fs.writeFile(configPath, `${JSON.stringify(configParsed, null, 2)}\n`);
   } catch (e) {
     console.error(`Failed to update app config, error: ${e}`);
   }
