@@ -24,7 +24,7 @@
     {
       "type": "password",
       "label": "Clé LiteLLM",
-      "hint": "Clé virtuelle limitée au modèle ci-dessous. Elle reste côté serveur, jamais dans le navigateur.",
+      "hint": "Clé virtuelle limitée aux modèles de l'atelier. Elle reste côté serveur, jamais dans le navigateur.",
       "required": true,
       "env_variable": "ATELIER_LITELLM_KEY"
     },
@@ -38,6 +38,7 @@
     {
       "type": "text",
       "label": "Modèle",
+      "hint": "qwen-nothink répond en ~5 s ; qwen-code raisonne d'abord (~20 s), un peu plus pédagogue.",
       "default": "qwen-nothink",
       "required": true,
       "env_variable": "ATELIER_MODELE"
