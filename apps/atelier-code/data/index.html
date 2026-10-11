@@ -307,7 +307,7 @@ function dessiner() {
 const nbEmojis = c => (c.match(/emoji\s*\(/g) || []).length;
 const MISSIONS = [
   { titre: "🎬 Le grand défi", demo: true,
-    texte: "Regarde ce jeu ! Une licorne attrape des fraises et fuit un fantôme. Clique dessus et joue avec les flèches ⬅️➡️⬆️⬇️.<br><b>Ce jeu, c'est TOI qui vas le fabriquer</b>, ligne après ligne, mission après mission. Prête ?",
+    texte: "Regarde ce jeu ! Une licorne attrape des fraises et fuit un fantôme. Clique dessus et joue avec les flèches ⬅️➡️⬆️⬇️.<br><b>Ce jeu, c'est TOI qui vas le fabriquer</b>, ligne après ligne, mission après mission. On y va ?",
     objectif: "Joue au jeu, puis clique sur la flèche ▶ à côté du titre pour commencer." },
   { titre: "🎨 Allume l'écran",
     texte: "Un programme, c'est une liste d'ordres pour l'ordinateur. Ton premier ordre : peindre l'écran ! Écris <code>fond(\"bleu\")</code> dans l'éditeur, puis clique sur ▶ Lancer.",
@@ -659,6 +659,8 @@ $('visiter').onchange = async () => {
 
 function ouvrir(projet) {
   moi = { mission: 0, reussies: [], code: '// Ton code commence ici 👇\n', ...projet };
+  // Profils créés à l'avance sans âge : l'âge règle le niveau des explications de Pixel.
+  while (!(moi.age > 0)) moi.age = Number(prompt(`Quel âge as-tu, ${moi.nom} ?`));
   try { localStorage.setItem('atelier-moi', moi.id); } catch {}
   $('accueil').hidden = true;
   $('atelier').hidden = false;
@@ -668,7 +670,8 @@ function ouvrir(projet) {
   editeur.refresh();
   afficherMission();
   if (!MISSIONS[moi.mission].demo) lancerMonCode();
-  bulle('pixel', `Coucou ${moi.nom} ! Je suis Pixel 🤖. Je vois ton code et tes erreurs. Si tu es bloquée, pose-moi une question !`);
+  sauver();
+  bulle('pixel', `Coucou ${moi.nom} ! Je suis Pixel 🤖. Je vois ton code et tes erreurs. Si tu bloques, pose-moi une question !`);
 }
 
 async function demarrer() {
@@ -692,7 +695,6 @@ $('nouveau').onsubmit = async e => {
   if (!id) return;
   const existant = projets.find(p => p.id === id);
   ouvrir(existant || { id, nom, age: Number($('nouveau-age').value) });
-  sauver();
 };
 
 demarrer();
