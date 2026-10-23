@@ -21,6 +21,18 @@
         "\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","
       ],
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^apps/pi-pocket/docker-compose\\.json$/"
+      ],
+      "matchStrings": [
+        "\"PI_POCKET_TAG\": \"(?<currentValue>v.*?)\""
+      ],
+      "depNameTemplate": "TannerMidd/pi-pocket",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ],
   "packageRules": [

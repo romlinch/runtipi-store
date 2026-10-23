@@ -9,7 +9,7 @@
       "shmSize": "1gb",
       "stopGracePeriod": "30s",
       "environment": {
-        "PI_POCKET_TAG": "v0.19.0",
+        "PI_POCKET_TAG": "v0.20.0",
         "PI_POCKET_APT": "${PI_POCKET_APT}",
         "PI_POCKET_BROWSER_ARGS": "--no-sandbox",
         "TZ": "${TZ}"
