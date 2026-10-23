@@ -10,7 +10,7 @@
     "development"
   ],
   "description": "Pi Pocket runs the Pi coding agent on Pi Durable behind a web app (PWA): sessions survive server restarts, scheduled messages, plan mode, forks, worktrees, push notifications, invites with roles and spend limits. Models come from Pi's own config (~/.pi/agent/models.json in the data volume). Anyone who can steer a session gets a shell in this container: keep it on the LAN.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "0.20.0",
   "source": "https://github.com/TannerMidd/pi-pocket",
   "website": "https://tannermidd.github.io/pi-pocket/",
