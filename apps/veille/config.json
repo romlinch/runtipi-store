@@ -1,0 +1,47 @@
+{
+  "name": "Veille",
+  "id": "veille",
+  "available": true,
+  "short_desc": "Lecteur RSS qui regroupe les articles traitant du même sujet et ne montre que le meilleur",
+  "author": "romlinch",
+  "port": 8130,
+  "categories": [
+    "media",
+    "ai"
+  ],
+  "description": "Lecteur RSS mono-utilisateur : récupère les flux, extrait le texte complet (crawl4ai), note chaque article (qualité, publicité déguisée, domaine, tags) avec Jev, regroupe les articles qui traitent de la même actualité et affiche un résumé en français avec un seul lien, vers le meilleur article.",
+  "tipi_version": 1,
+  "version": "0.1.0",
+  "source": "https://github.com/romlinch/runtipi-store/tree/main/apps/veille",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1792954762378,
+  "updated_at": 1792954762378,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Identifiant",
+      "hint": "Identifiant de l'écran de connexion. Le mot de passe est le hash argon2 du fichier data/password-hash (créé par le script de déploiement).",
+      "required": true,
+      "env_variable": "VEILLE_USER"
+    },
+    {
+      "type": "password",
+      "label": "Clé LiteLLM",
+      "hint": "Clé virtuelle limitée aux modèles de veille (Jev, embeddings, résumés).",
+      "required": true,
+      "env_variable": "VEILLE_LITELLM_KEY"
+    },
+    {
+      "type": "password",
+      "label": "Token crawl4ai",
+      "hint": "CRAWL4AI_API_TOKEN de l'app crawl4ai (l'URL est dans config.toml).",
+      "required": true,
+      "env_variable": "VEILLE_CRAWL4AI_TOKEN"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "services": [
+    {
+      "name": "veille",
+      "image": "debian:trixie-20261005-slim",
+      "isMain": true,
+      "internalPort": "8080",
+      "command": ["/data/bin/veille"],
+      "environment": {
+        "VEILLE_DATA": "/data",
+        "VEILLE_USER": "${VEILLE_USER}",
+        "LITELLM_KEY": "${VEILLE_LITELLM_KEY}",
+        "CRAWL4AI_TOKEN": "${VEILLE_CRAWL4AI_TOKEN}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/data"
+        }
+      ]
+    }
+  ]
+}
