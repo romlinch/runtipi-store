@@ -10,6 +10,7 @@
         "LITELLM_KEY": "${ATELIER_LITELLM_KEY}",
         "LITELLM_URL": "${ATELIER_LITELLM_URL}",
         "MODELE": "${ATELIER_MODELE}",
+        "MOT_DE_PASSE": "${ATELIER_MOT_DE_PASSE}",
         "PRENOMS": "${ATELIER_PRENOMS}",
         "PROJETS_DIR": "/app/projets",
         "PYTHONUNBUFFERED": "1"

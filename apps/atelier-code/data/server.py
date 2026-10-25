@@ -6,6 +6,8 @@
 La clé LiteLLM reste ici, jamais dans le navigateur. Le modèle est imposé côté serveur.
 """
 
+import base64
+import hmac
 import json
 import os
 import re
@@ -20,13 +22,31 @@ PROJETS = Path(os.environ.get("PROJETS_DIR", ICI / "projets"))
 LITELLM_URL = os.environ.get("LITELLM_URL", "https://litellm.romlinch.fr/v1/chat/completions")
 LITELLM_KEY = os.environ["LITELLM_KEY"]
 MODELE = os.environ.get("MODELE", "qwen-nothink")
+MOT_DE_PASSE = os.environ.get("MOT_DE_PASSE", "")  # vide = pas de protection
 PORT = int(os.environ.get("PORT", "8000"))
 TAILLE_MAX = 300_000  # octets, largement assez pour le code d'un enfant
 ID = re.compile(r"[a-z0-9-]{1,30}")
 
 
 class Handler(BaseHTTPRequestHandler):
+    def autorise(self):
+        """Basic auth, n'importe quel identifiant : le navigateur la redemande une fois puis la renvoie sur chaque fetch."""
+        _, _, b64 = (self.headers.get("Authorization") or "").partition("Basic ")
+        try:
+            mot = base64.b64decode(b64).decode().partition(":")[2]
+        except ValueError:
+            mot = ""
+        if not MOT_DE_PASSE or hmac.compare_digest(mot.encode(), MOT_DE_PASSE.encode()):
+            return True
+        self.send_response(401)
+        self.send_header("WWW-Authenticate", 'Basic realm="Atelier de code", charset="UTF-8"')
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+        return False
+
     def do_GET(self):
+        if not self.autorise():
+            return
         if self.path == "/":
             self.repondre(200, (ICI / "index.html").read_bytes(), "text/html; charset=utf-8")
         elif self.path == "/api/projets":
@@ -36,6 +56,8 @@ class Handler(BaseHTTPRequestHandler):
             self.repondre(404, b"introuvable")
 
     def do_PUT(self):
+        if not self.autorise():
+            return
         id_ = self.path.removeprefix("/api/projets/")
         corps = self.lire_json()
         if not ID.fullmatch(id_) or not isinstance(corps, dict):
@@ -47,6 +69,8 @@ class Handler(BaseHTTPRequestHandler):
         self.repondre(204, b"")
 
     def do_POST(self):
+        if not self.autorise():
+            return
         corps = self.lire_json()
         if self.path != "/api/chat" or not isinstance(corps, dict) or not isinstance(corps.get("messages"), list):
             return self.repondre(400, b"requete invalide")

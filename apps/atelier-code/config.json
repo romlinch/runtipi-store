@@ -9,8 +9,8 @@
     "development"
   ],
   "description": "Atelier de code pour enfants dans le navigateur : missions qui construisent un jeu vidéo pas à pas, éditeur, aperçu du jeu, et Pixel, un assistant (Qwen via LiteLLM) qui voit le code et les erreurs. Projets enregistrés sur le serveur, un par enfant.",
-  "tipi_version": 2,
-  "version": "1.0.0",
+  "tipi_version": 3,
+  "version": "1.1.0",
   "source": "https://github.com/romlinch/runtipi-store/tree/main/apps/atelier-code",
   "exposable": true,
   "supported_architectures": [
@@ -18,7 +18,7 @@
     "amd64"
   ],
   "created_at": 1791708480758,
-  "updated_at": 1791713382793,
+  "updated_at": 1792945888685,
   "dynamic_config": true,
   "form_fields": [
     {
@@ -49,6 +49,13 @@
       "hint": "Profils créés au démarrage s'ils n'existent pas, séparés par des virgules (ex. Alice,Paul). D'autres enfants peuvent s'ajouter depuis la page.",
       "required": false,
       "env_variable": "ATELIER_PRENOMS"
+    },
+    {
+      "type": "password",
+      "label": "Mot de passe",
+      "hint": "Demandé par le navigateur (n'importe quel identifiant). Vide = pas de protection.",
+      "required": false,
+      "env_variable": "ATELIER_MOT_DE_PASSE"
     }
   ]
 }
