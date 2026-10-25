@@ -76,6 +76,7 @@ details summary { cursor: pointer; color: var(--violet); font-weight: 600; }
 #raccourcis { display: flex; gap: 6px; padding: 0 12px; flex-wrap: wrap; }
 #raccourcis button { font-size: 14px; padding: 3px 10px; }
 #question { display: flex; gap: 8px; padding: 10px 12px; }
+#micro.enregistre { background: var(--rouge); color: #fff; }
 #question input { flex: 1; font: inherit; padding: 8px 12px; border: 2px solid var(--bord); border-radius: 12px; }
 
 /* Bravo */
@@ -140,6 +141,7 @@ details summary { cursor: pointer; color: var(--violet); font-weight: 600; }
           <button>✅ Est-ce que j'ai réussi ?</button>
         </div>
         <form id="question">
+          <button type="button" id="micro" title="Parler à Pixel">🎤</button>
           <input id="question-texte" placeholder="Pose ta question à Pixel 🤖" autocomplete="off">
           <button class="gros">Envoyer</button>
         </form>
@@ -699,6 +701,38 @@ $('question').onsubmit = e => {
   if (!q) return;
   $('question-texte').value = '';
   demander(q);
+};
+// 🎤 : un clic pour parler, un clic pour arrêter ; le texte reconnu va dans la question, sans l'envoyer.
+let enregistreur = null;
+$('micro').onclick = async () => {
+  if (enregistreur) return enregistreur.stop();
+  let flux;
+  try {
+    flux = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch {
+    return bulle('pixel', "🎤 Je n'ai pas accès au micro. Autorise-le dans le navigateur !");
+  }
+  const morceaux = [];
+  enregistreur = new MediaRecorder(flux);
+  enregistreur.ondataavailable = e => morceaux.push(e.data);
+  enregistreur.onstop = async () => {
+    flux.getTracks().forEach(t => t.stop());
+    const type = enregistreur.mimeType;
+    enregistreur = null;
+    Object.assign($('micro'), { className: '', textContent: '⏳', disabled: true });
+    try {
+      const r = await fetch('/api/stt', { method: 'POST', headers: { 'Content-Type': type }, body: new Blob(morceaux, { type }) });
+      if (!r.ok) throw new Error(await r.text());
+      const champ = $('question-texte');
+      champ.value = `${champ.value} ${(await r.json()).texte}`.trim();
+      champ.focus();
+    } catch (e) {
+      bulle('pixel', "😵 Je n'ai pas réussi à t'écouter. Réessaie ! (" + e.message + ")");
+    }
+    Object.assign($('micro'), { textContent: '🎤', disabled: false });
+  };
+  enregistreur.start();
+  Object.assign($('micro'), { className: 'enregistre', textContent: '⏹️' });
 };
 $('raccourcis').onclick = e => { if (e.target.tagName === 'BUTTON') demander(e.target.textContent.replace(/^\S+\s/, '')); };
 

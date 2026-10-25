@@ -22,9 +22,11 @@ PROJETS = Path(os.environ.get("PROJETS_DIR", ICI / "projets"))
 LITELLM_URL = os.environ.get("LITELLM_URL", "https://litellm.romlinch.fr/v1/chat/completions")
 LITELLM_KEY = os.environ["LITELLM_KEY"]
 MODELE = os.environ.get("MODELE", "qwen-nothink")
+STT_URL = LITELLM_URL.replace("/chat/completions", "/audio/transcriptions")
 MOT_DE_PASSE = os.environ.get("MOT_DE_PASSE", "")  # vide = pas de protection
 PORT = int(os.environ.get("PORT", "8000"))
 TAILLE_MAX = 300_000  # octets, largement assez pour le code d'un enfant
+AUDIO_MAX = 5_000_000  # quelques minutes de voix en opus
 ID = re.compile(r"[a-z0-9-]{1,30}")
 
 
@@ -71,6 +73,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self.autorise():
             return
+        if self.path == "/api/stt":
+            return self.transcrire()
         corps = self.lire_json()
         if self.path != "/api/chat" or not isinstance(corps, dict) or not isinstance(corps.get("messages"), list):
             return self.repondre(400, b"requete invalide")
@@ -91,6 +95,28 @@ class Handler(BaseHTTPRequestHandler):
                     self.wfile.flush()
         except (urllib.error.URLError, TimeoutError) as e:
             self.repondre(502, f"LiteLLM injoignable : {e}".encode())
+
+    def transcrire(self):
+        """Audio du micro → texte, via la route stt de LiteLLM (multipart OpenAI)."""
+        taille = int(self.headers.get("Content-Length") or 0)
+        type_ = self.headers.get("Content-Type", "audio/webm")
+        if not 0 < taille <= AUDIO_MAX:
+            return self.repondre(400, b"audio invalide")
+        audio = self.rfile.read(taille)
+        ext = "mp4" if "mp4" in type_ else "ogg" if "ogg" in type_ else "webm"
+        limite = "atelier" + os.urandom(8).hex()
+        corps = b"".join(f'--{limite}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode() for k, v in {"model": "stt", "language": "fr"}.items())
+        corps += f'--{limite}\r\nContent-Disposition: form-data; name="file"; filename="voix.{ext}"\r\nContent-Type: {type_}\r\n\r\n'.encode() + audio + f"\r\n--{limite}--\r\n".encode()
+        requete = urllib.request.Request(
+            STT_URL, data=corps,
+            headers={"Authorization": f"Bearer {LITELLM_KEY}", "Content-Type": f"multipart/form-data; boundary={limite}"},
+        )
+        try:
+            with urllib.request.urlopen(requete, timeout=60) as r:
+                texte = json.loads(r.read())["text"]
+        except (urllib.error.URLError, TimeoutError, KeyError, ValueError) as e:
+            return self.repondre(502, f"transcription impossible : {e}".encode())
+        self.repondre(200, json.dumps({"texte": texte.strip()}, ensure_ascii=False).encode(), "application/json")
 
     def lire_json(self):
         taille = int(self.headers.get("Content-Length") or 0)
