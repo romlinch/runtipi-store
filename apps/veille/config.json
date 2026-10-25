@@ -9,7 +9,7 @@
     "media",
     "ai"
   ],
-  "description": "Lecteur RSS mono-utilisateur : récupère les flux, extrait le texte complet (crawl4ai), note chaque article (qualité, publicité déguisée, domaine, tags) avec Jev, regroupe les articles qui traitent de la même actualité et affiche un résumé en français avec un seul lien, vers le meilleur article.",
+  "description": "Lecteur RSS pour une famille (plusieurs comptes, flux partagés, abonnements et tags par compte, réglés dans l'interface) : récupère les flux, extrait le texte complet (crawl4ai), note chaque article (qualité, publicité déguisée, domaine, tags) avec Jev, regroupe les articles qui traitent de la même actualité et affiche un résumé en français avec un seul lien, vers le meilleur article.",
   "tipi_version": 1,
   "version": "0.1.0",
   "source": "https://github.com/romlinch/runtipi-store/tree/main/apps/veille",
@@ -24,9 +24,9 @@
   "form_fields": [
     {
       "type": "text",
-      "label": "Identifiant",
-      "hint": "Identifiant de l'écran de connexion. Le mot de passe est le hash argon2 du fichier data/password-hash (créé par le script de déploiement).",
-      "required": true,
+      "label": "Ancien identifiant",
+      "hint": "Facultatif : compte unique des versions précédentes (hash dans data/password-hash), importé au premier démarrage. Les comptes se créent avec « veille add-user <nom> » dans le conteneur.",
+      "required": false,
       "env_variable": "VEILLE_USER"
     },
     {
