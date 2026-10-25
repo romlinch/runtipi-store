@@ -70,6 +70,9 @@ details summary { cursor: pointer; color: var(--violet); font-weight: 600; }
 .bulle { max-width: 88%; padding: 8px 12px; border-radius: 14px; white-space: pre-wrap; }
 .bulle.pixel { background: var(--violet-clair); align-self: flex-start; }
 .bulle.moi { background: var(--jaune); align-self: flex-end; }
+.reflexion { color: var(--doux); font-size: 14px; }
+.reflexion summary { color: var(--doux); font-weight: 400; }
+.reflexion div { max-height: 7em; overflow: auto; }
 #raccourcis { display: flex; gap: 6px; padding: 0 12px; flex-wrap: wrap; }
 #raccourcis button { font-size: 14px; padding: 3px 10px; }
 #question { display: flex; gap: 8px; padding: 10px 12px; }
@@ -364,7 +367,7 @@ const MISSIONS = [
     indice: 'let etoiles = []\nfor (let i = 0; i < 40; i++) {\n  etoiles.push({ x: auHasard(0, LARGEUR), y: auHasard(0, HAUTEUR) })\n}\n\n// dans dessiner(), juste après fond(...) :\nfor (const e of etoiles) {\n  rond(e.x, e.y, 2, "blanc")\n  e.y = e.y + 1\n}',
     check: c => /\bfor\s*\(/.test(c) && /\.push\s*\(/.test(c) },
   { titre: "🏆 Ton jeu à toi !",
-    texte: "Bravo, tu as fabriqué un vrai jeu vidéo ! 🎉 Maintenant, invente : le fantôme va plus vite quand le score monte ? Un deuxième fantôme ? Une fraise dorée qui vaut 5 points ? Des niveaux ? Demande des idées à Pixel, et fais jouer ta famille avec « 👀 Jouer au jeu de… ».",
+    texte: "Bravo, tu as fabriqué un vrai jeu vidéo ! 🎉 Maintenant, invente : le fantôme va plus vite quand le score monte ? Un deuxième fantôme ? Une fraise dorée qui vaut 5 points ? Des niveaux ? Dis à Pixel ce que tu veux ajouter : il écrit le code pour toi directement dans l'éditeur ! Et fais jouer ta famille avec « 👀 Jouer au jeu de… ».",
     objectif: "Ajoute ta propre idée au jeu." },
 ];
 
@@ -519,6 +522,52 @@ function afficherEtoiles() {
 
 // ---------- Pixel, l'assistant (Qwen via le serveur) ----------
 
+// Toutes les missions sont faites : Pixel code à la place de l'enfant, en patchant l'éditeur avec l'outil modifier_code.
+const modeCodeur = () => moi.mission >= MISSIONS.length - 1;
+const APPRENTI = `- Tu ne donnes JAMAIS la solution complète d'une mission. Tu donnes un indice, tu poses une question qui fait réfléchir, ou tu montres au maximum UNE ou DEUX lignes d'exemple.
+- S'il y a une erreur, explique avec des mots simples ce qu'elle veut dire et dis à quelle ligne regarder.
+- Si l'enfant est bloqué après plusieurs essais, tu peux montrer un peu plus, toujours en expliquant.`;
+const CODEUR = `- L'enfant a fini toutes les missions : maintenant, c'est TOI qui codes ce qu'il demande (changement, idée, correction d'erreur), avec l'outil modifier_code. Ne recopie pas le programme dans le chat.
+- Chaque remplacement : « avant » = un extrait copié exactement du code actuel, SANS les numéros « 12| », assez long pour n'exister qu'une fois ; « apres » = ce qui le remplace. Pour ajouter des lignes, prends une ligne voisine comme repère et remets-la dans « apres ».
+- L'outil lance le jeu et te dit s'il y a une erreur : corrige-la avant de répondre.
+- Ensuite, dis en 1 ou 2 phrases simples ce que tu as changé.
+- Si la question ne demande aucun changement, réponds sans l'outil.`;
+const OUTILS = [{ type: 'function', function: {
+  name: 'modifier_code',
+  description: "Modifie le code de l'éditeur de l'enfant par remplacements exacts, puis lance le jeu.",
+  parameters: { type: 'object', required: ['remplacements'], properties: { remplacements: { type: 'array', items: {
+    type: 'object', required: ['avant', 'apres'],
+    properties: { avant: { type: 'string', description: 'extrait exact et unique du code actuel' }, apres: { type: 'string' } },
+  } } } },
+} }];
+
+// Tous les remplacements ou aucun : renvoie l'erreur à montrer au modèle, ou null si c'est fait.
+function patcher(remplacements) {
+  let texte = editeur.getValue();
+  for (const [i, { avant, apres }] of (remplacements ?? []).entries()) {
+    const n = typeof avant === 'string' && avant ? texte.split(avant).length - 1 : 0;
+    if (n !== 1 || typeof apres !== 'string') return `Remplacement ${i + 1} refusé : « avant » trouvé ${n} fois au lieu d'une. Recopie un extrait exact et unique du code actuel, sans les numéros de ligne. Rien n'a été modifié.`;
+    texte = texte.replace(avant, () => apres);
+  }
+  editeur.operation(() => {
+    for (const { avant, apres } of remplacements) {
+      const i = editeur.getValue().indexOf(avant);
+      editeur.replaceRange(apres, editeur.posFromIndex(i), editeur.posFromIndex(i + avant.length));
+    }
+  });
+  return null;
+}
+
+async function executer(appel) {
+  let args;
+  try { args = JSON.parse(appel.function.arguments); } catch { return 'Arguments JSON invalides.'; }
+  const refus = appel.function.name === 'modifier_code' ? patcher(args.remplacements) : 'Outil inconnu.';
+  if (refus) return refus;
+  lancerMonCode();
+  await new Promise(ok => setTimeout(ok, 1000)); // le temps que le jeu démarre et signale une erreur
+  return derniereErreur ? `Code modifié et lancé, mais erreur ligne ${derniereErreur.ligne} : ${derniereErreur.message}` : 'Code modifié et lancé, aucune erreur.';
+}
+
 function systeme() {
   return `Tu es Pixel 🤖, le robot qui aide ${moi.nom} (${moi.age} ans) à apprendre le JavaScript en créant son propre jeu vidéo dans l'« atelier de code ».
 
@@ -528,9 +577,7 @@ Comment tu parles :
 - Pas de titres, pas de tableaux, pas de listes longues. Le code va entre \`\`\` et \`\`\`.
 
 Comment tu aides :
-- Tu ne donnes JAMAIS la solution complète d'une mission. Tu donnes un indice, tu poses une question qui fait réfléchir, ou tu montres au maximum UNE ou DEUX lignes d'exemple.
-- S'il y a une erreur, explique avec des mots simples ce qu'elle veut dire et dis à quelle ligne regarder.
-- Si l'enfant est bloqué après plusieurs essais, tu peux montrer un peu plus, toujours en expliquant.
+${modeCodeur() ? CODEUR : APPRENTI}
 - Tu vois toujours la mission, le code actuel et la dernière erreur (bloc « Ce que Pixel voit »). Sers-t'en, ne demande jamais de recopier le code.
 - L'enfant écrit en JavaScript sans point-virgule, c'est voulu : ne les réclame pas.
 - L'enfant ne parle pas anglais mais lit très bien le français. Chaque fois que tu utilises un mot anglais du JavaScript (let, if, else, function, return, for…), donne son sens en français. Ne recopie jamais un message d'erreur en anglais : traduis-le et explique-le.
@@ -560,8 +607,10 @@ ${code}
 Dernière erreur : ${derniereErreur ? `ligne ${derniereErreur.ligne} : ${derniereErreur.message}` : 'aucune'}`;
 }
 
+const echapper = t => t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+
 function joli(t) {
-  return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c])
+  return echapper(t)
     .replace(/```\w*\n?([\s\S]*?)(```|$)/g, (_, code) => `<pre>${code.trimEnd()}</pre>`)
     .replace(/`([^`\n]+)`/g, '<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
@@ -584,24 +633,56 @@ async function demander(question) {
     { role: 'user', content: `${contexte()}\n\nQuestion de ${moi.nom} : ${question}` },
   ];
   historique.push({ role: 'user', content: question });
+  const outils = modeCodeur() ? OUTILS : undefined;
   const b = bulle('pixel', '🤔…');
-  let reponse = '';
+  let affiche = '', reflexion = '', reponse = '';
+  const afficher = () => {
+    // La réflexion défile pendant que Pixel pense, puis se replie quand il répond.
+    b.innerHTML = (reflexion && `<details class="reflexion"${affiche ? '' : ' open'}><summary>💭 ${affiche ? 'Ce que Pixel a pensé' : 'Pixel réfléchit…'}</summary><div>${echapper(reflexion)}</div></details>`)
+      + (affiche ? joli(affiche) : reflexion ? '' : '🤔…');
+    const r = b.querySelector('.reflexion div');
+    if (r) r.scrollTop = r.scrollHeight;
+    $('messages').scrollTop = $('messages').scrollHeight;
+  };
   try {
-    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages }) });
-    if (!r.ok) throw new Error(await r.text());
-    const lecteur = r.body.pipeThrough(new TextDecoderStream()).getReader();
-    let tampon = '';
-    for (;;) {
-      const { value, done } = await lecteur.read();
-      if (done) break;
-      tampon += value;
-      const lignes = tampon.split('\n');
-      tampon = lignes.pop();
-      for (const l of lignes) {
-        if (!l.startsWith('data: ') || l === 'data: [DONE]') continue;
-        reponse += JSON.parse(l.slice(6)).choices?.[0]?.delta?.content ?? '';
-        b.innerHTML = joli(reponse);
-        $('messages').scrollTop = $('messages').scrollHeight;
+    for (let tour = 0; tour < 5; tour++) {
+      const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages, tools: outils }) });
+      if (!r.ok) throw new Error(await r.text());
+      const lecteur = r.body.pipeThrough(new TextDecoderStream()).getReader();
+      let tampon = '', contenu = '';
+      const appels = [];
+      for (;;) {
+        const { value, done } = await lecteur.read();
+        if (done) break;
+        tampon += value;
+        const lignes = tampon.split('\n');
+        tampon = lignes.pop();
+        for (const l of lignes) {
+          if (!l.startsWith('data: ') || l === 'data: [DONE]') continue;
+          const delta = JSON.parse(l.slice(6)).choices?.[0]?.delta ?? {};
+          contenu += delta.content ?? '';
+          affiche += delta.content ?? '';
+          reflexion += delta.reasoning_content ?? '';
+          // Les appels d'outils arrivent en morceaux, rangés par index.
+          for (const t of delta.tool_calls ?? []) {
+            const a = appels[t.index ?? 0] ??= { id: '', type: 'function', function: { name: '', arguments: '' } };
+            if (t.id) a.id = t.id;
+            if (t.function?.name) a.function.name = t.function.name;
+            a.function.arguments += t.function?.arguments ?? '';
+          }
+          afficher();
+        }
+      }
+      reponse += contenu;
+      if (!appels.length) break;
+      messages.push({ role: 'assistant', content: contenu, tool_calls: appels });
+      for (const a of appels) {
+        affiche += '\n✏️ Je modifie ton code…';
+        afficher();
+        const resultat = await executer(a);
+        affiche += resultat.startsWith('Code modifié') ? ' ✅ (Ctrl+Z pour revenir en arrière)\n' : ' 😬 raté, je réessaie\n';
+        afficher();
+        messages.push({ role: 'tool', tool_call_id: a.id, content: resultat });
       }
     }
   } catch (e) {

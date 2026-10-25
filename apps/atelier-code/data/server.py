@@ -52,7 +52,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.repondre(400, b"requete invalide")
         requete = urllib.request.Request(
             LITELLM_URL,
-            data=json.dumps({"model": MODELE, "messages": corps["messages"], "stream": True, "max_tokens": 2000}).encode(),
+            data=json.dumps({"model": MODELE, "messages": corps["messages"], "stream": True, "max_tokens": 32768}
+                            | ({"tools": corps["tools"]} if isinstance(corps.get("tools"), list) else {})).encode(),
             headers={"Authorization": f"Bearer {LITELLM_KEY}", "Content-Type": "application/json"},
         )
         try:
