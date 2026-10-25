@@ -544,12 +544,19 @@ const OUTILS = [{ type: 'function', function: {
 } }];
 
 // Tous les remplacements ou aucun : renvoie l'erreur à montrer au modèle, ou null si c'est fait.
+// Le contexte numérote les lignes « 12| » : le modèle les recopie parfois.
+const sansNumeros = t => typeof t === 'string' && t.split('\n').every(l => /^\s*\d+\| ?/.test(l)) ? t.replace(/^\s*\d+\| ?/gm, '') : t;
+
 function patcher(remplacements) {
+  if (!remplacements.length) return 'Aucun remplacement fourni.';
   let texte = editeur.getValue();
-  for (const [i, { avant, apres }] of (remplacements ?? []).entries()) {
-    const n = typeof avant === 'string' && avant ? texte.split(avant).length - 1 : 0;
-    if (n !== 1 || typeof apres !== 'string') return `Remplacement ${i + 1} refusé : « avant » trouvé ${n} fois au lieu d'une. Recopie un extrait exact et unique du code actuel, sans les numéros de ligne. Rien n'a été modifié.`;
-    texte = texte.replace(avant, () => apres);
+  for (const [i, r] of remplacements.entries()) {
+    r.avant = sansNumeros(r.avant);
+    r.apres = sansNumeros(r.apres);
+    const n = typeof r.avant === 'string' && r.avant ? texte.split(r.avant).length - 1 : 0;
+    // Le code a pu changer depuis le début de la conversation : renvoyer la version exacte à recopier.
+    if (n !== 1 || typeof r.apres !== 'string') return `Remplacement ${i + 1} refusé : « avant » trouvé ${n} fois au lieu d'une. Rien n'a été modifié. Code actuel exact, à recopier caractère pour caractère :\n\`\`\`\n${editeur.getValue()}\n\`\`\``;
+    texte = texte.replace(r.avant, () => r.apres);
   }
   editeur.operation(() => {
     for (const { avant, apres } of remplacements) {
@@ -563,7 +570,12 @@ function patcher(remplacements) {
 async function executer(appel) {
   let args;
   try { args = JSON.parse(appel.function.arguments); } catch { return 'Arguments JSON invalides.'; }
-  const refus = appel.function.name === 'modifier_code' ? patcher(args.remplacements) : 'Outil inconnu.';
+  let refus;
+  try {
+    refus = appel.function.name === 'modifier_code' ? patcher(args.remplacements ?? [args]) : 'Outil inconnu.';
+  } catch {
+    refus = 'Arguments invalides : remplacements doit être une liste de { avant, apres }.';
+  }
   if (refus) return refus;
   lancerMonCode();
   await new Promise(ok => setTimeout(ok, 1000)); // le temps que le jeu démarre et signale une erreur
@@ -637,18 +649,22 @@ async function demander(question) {
   historique.push({ role: 'user', content: question });
   const outils = modeCodeur() ? OUTILS : undefined;
   const b = bulle('pixel', '🤔…');
-  let affiche = '', reflexion = '', reponse = '';
+  let affiche = '', reflexion = '', reponse = '', echecs = 0;
   const afficher = () => {
     // La réflexion défile pendant que Pixel pense, puis se replie quand il répond.
+    // Ne suivre le texte que si l'enfant est déjà en bas : sinon il ne peut pas remonter lire ou copier.
+    const m = $('messages'), enBas = m.scrollHeight - m.scrollTop - m.clientHeight < 60;
+    const avant = b.querySelector('.reflexion div'), reflexionEnBas = !avant || avant.scrollHeight - avant.scrollTop - avant.clientHeight < 30;
     b.innerHTML = (reflexion && `<details class="reflexion"${affiche ? '' : ' open'}><summary>💭 ${affiche ? 'Ce que Pixel a pensé' : 'Pixel réfléchit…'}</summary><div>${echapper(reflexion)}</div></details>`)
       + (affiche ? joli(affiche) : reflexion ? '' : '🤔…');
     const r = b.querySelector('.reflexion div');
-    if (r) r.scrollTop = r.scrollHeight;
-    $('messages').scrollTop = $('messages').scrollHeight;
+    if (r) r.scrollTop = reflexionEnBas ? r.scrollHeight : avant.scrollTop;
+    if (enBas) m.scrollTop = m.scrollHeight;
   };
   try {
     for (let tour = 0; tour < 5; tour++) {
-      const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages, tools: outils }) });
+      // Après 3 modifications ratées, plus d'outil : Pixel doit répondre avec des mots.
+      const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages, tools: echecs < 3 ? outils : undefined }) });
       if (!r.ok) throw new Error(await r.text());
       const lecteur = r.body.pipeThrough(new TextDecoderStream()).getReader();
       let tampon = '', contenu = '';
@@ -681,8 +697,13 @@ async function demander(question) {
       for (const a of appels) {
         affiche += '\n✏️ Je modifie ton code…';
         afficher();
-        const resultat = await executer(a);
-        affiche += resultat.startsWith('Code modifié') ? ' ✅ (Ctrl+Z pour revenir en arrière)\n' : ' 😬 raté, je réessaie\n';
+        let resultat = await executer(a);
+        if (resultat.startsWith('Code modifié')) affiche += ' ✅ (Ctrl+Z pour revenir en arrière)\n';
+        else if (++echecs < 3) affiche += ' 😬 raté, je réessaie\n';
+        else {
+          affiche += ' 😬 raté, j\'arrête d\'essayer\n';
+          resultat += "\n3 essais ratés : n'essaie plus. Explique à l'enfant ce que tu voulais changer et montre-lui les lignes à écrire lui-même.";
+        }
         afficher();
         messages.push({ role: 'tool', tool_call_id: a.id, content: resultat });
       }
@@ -709,8 +730,12 @@ $('micro').onclick = async () => {
   let flux;
   try {
     flux = await navigator.mediaDevices.getUserMedia({ audio: true });
-  } catch {
-    return bulle('pixel', "🎤 Je n'ai pas accès au micro. Autorise-le dans le navigateur !");
+  } catch (e) {
+    // Sans https, le navigateur n'expose pas le micro et ne demande rien : le dire plutôt que « autorise-le ».
+    return bulle('pixel', !isSecureContext ? "🎤 Le micro ne marche qu'en https : ouvre https://atelier.romlinch.fr"
+      : e.name === 'NotFoundError' ? "🎤 Je ne trouve aucun micro branché."
+      : e.name === 'NotAllowedError' ? "🎤 Le micro est bloqué pour ce site : clique sur le cadenas ou le micro barré à gauche de l'adresse et autorise-le."
+      : `🎤 Le micro ne répond pas (${e.name} : ${e.message})`);
   }
   const morceaux = [];
   enregistreur = new MediaRecorder(flux);
