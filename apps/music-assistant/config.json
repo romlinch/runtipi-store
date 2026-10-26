@@ -1,0 +1,24 @@
+{
+  "name": "Music Assistant",
+  "id": "music-assistant",
+  "available": true,
+  "short_desc": "Media library manager that streams to your connected speakers",
+  "author": "Music Assistant",
+  "port": 8095,
+  "categories": [
+    "media"
+  ],
+  "description": "Music Assistant connects your streaming services and local music library to a wide range of speakers (AirPlay, Chromecast, Sonos, DLNA, Squeezebox, Snapcast) and integrates with Home Assistant.",
+  "tipi_version": 1,
+  "version": "2.10.8",
+  "source": "https://github.com/music-assistant/server",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1793044067629,
+  "updated_at": 1793044067629,
+  "dynamic_config": true,
+  "form_fields": []
+}
