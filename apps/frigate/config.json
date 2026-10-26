@@ -10,8 +10,8 @@
     "media"
   ],
   "description": "Frigate is an open source NVR built around real-time AI object detection. It uses OpenCV and Tensorflow to perform real-time object detection locally on live camera feeds.",
-  "tipi_version": 5,
-  "version": "0.18.0",
+  "tipi_version": 6,
+  "version": "0.18.2",
   "source": "https://github.com/blakeblackshear/frigate",
   "exposable": true,
   "supported_architectures": [
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1736090700000,
-  "updated_at": 1791713383008,
+  "updated_at": 1793045903167,
   "dynamic_config": true,
   "form_fields": [
     {

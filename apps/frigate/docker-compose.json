@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "frigate",
-      "image": "ghcr.io/blakeblackshear/frigate:0.18.0",
+      "image": "ghcr.io/blakeblackshear/frigate:0.18.2",
       "isMain": true,
       "internalPort": "5000",
       "privileged": true,
