@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "degoog",
-      "image": "ghcr.io/degoog-org/degoog:1.1.0",
+      "image": "ghcr.io/degoog-org/degoog:1.1.1",
       "isMain": true,
       "internalPort": 4444,
       "environment": {
