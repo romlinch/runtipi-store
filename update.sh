@@ -5,6 +5,8 @@
 set -euo pipefail
 
 export RENOVATE_TOKEN="${RENOVATE_TOKEN:-$(gh auth token)}"
+# ~/.npmrc pointe vers le registre pro, injoignable hors VPN.
+export BUN_CONFIG_REGISTRY="https://registry.npmjs.org"
 export LOG_LEVEL="${LOG_LEVEL:-INFO}"
 export RENOVATE_DRY_RUN="${DRY_RUN:-}"
 
