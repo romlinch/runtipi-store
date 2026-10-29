@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "crawl4ai",
-      "image": "unclecode/crawl4ai:0.9.4",
+      "image": "unclecode/crawl4ai:0.9.5",
       "isMain": true,
       "internalPort": "11235",
       "addToMainNetwork": true,
