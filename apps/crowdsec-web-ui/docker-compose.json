@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "crowdsec-web-ui",
-      "image": "ghcr.io/theduffman85/crowdsec-web-ui:2026.10.3",
+      "image": "ghcr.io/theduffman85/crowdsec-web-ui:2026.10.12",
       "isMain": true,
       "internalPort": 3000,
       "environment": {
