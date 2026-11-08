@@ -27,6 +27,14 @@
         {
           "hostPath": "${APP_DATA_DIR}/data/workspace",
           "containerPath": "/workspace"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/apt-archives",
+          "containerPath": "/var/cache/apt/archives"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/apt-lists",
+          "containerPath": "/var/lib/apt/lists"
         }
       ]
     }

@@ -8,9 +8,14 @@ TAG="${PI_POCKET_TAG:?PI_POCKET_TAG manquant}"
 SRC="/home/node/app/pi-pocket-$TAG"
 as_node() { setpriv --reuid=1000 --regid=1000 --init-groups env HOME=/home/node "$@"; }
 
-if [ -n "${PI_POCKET_APT:-}" ]; then
-  # shellcheck disable=SC2086 # liste de paquets séparés par des espaces
-  apt-get update -qq && apt-get install -y -qq --no-install-recommends $PI_POCKET_APT
+# Simple redémarrage : paquets déjà là, rien à faire. Recréation : les .deb et les listes apt sont gardés
+# dans le volume (docker-clean les effacerait), donc rien n'est retéléchargé.
+# shellcheck disable=SC2086 # liste de paquets séparés par des espaces
+if [ -n "${PI_POCKET_APT:-}" ] && ! dpkg -s $PI_POCKET_APT >/dev/null 2>&1; then
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  mkdir -p /var/cache/apt/archives/partial /var/lib/apt/lists/partial
+  apt-get install -y -qq --no-install-recommends $PI_POCKET_APT 2>/dev/null \
+    || { apt-get update -qq && apt-get install -y -qq --no-install-recommends $PI_POCKET_APT; }
 fi
 
 mkdir -p /home/node/app /home/node/.ssh /workspace
