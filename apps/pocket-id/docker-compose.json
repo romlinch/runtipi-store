@@ -1,0 +1,29 @@
+{
+  "services": [
+    {
+      "name": "pocket-id",
+      "image": "ghcr.io/pocket-id/pocket-id:v2.19.3",
+      "isMain": true,
+      "internalPort": 1411,
+      "environment": {
+        "APP_URL": "${APP_PROTOCOL}://${APP_DOMAIN}",
+        "TRUST_PROXY": "true",
+        "ENCRYPTION_KEY": "${POCKET_ID_ENCRYPTION_KEY}",
+        "TZ": "${TZ}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/app/data"
+        }
+      ],
+      "healthCheck": {
+        "test": "/app/pocket-id healthcheck",
+        "interval": "90s",
+        "timeout": "5s",
+        "retries": 2,
+        "startPeriod": "10s"
+      }
+    }
+  ]
+}

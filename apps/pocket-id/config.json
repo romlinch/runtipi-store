@@ -1,0 +1,34 @@
+{
+  "name": "Pocket ID",
+  "id": "pocket-id",
+  "available": true,
+  "short_desc": "Simple OIDC provider with passkey-only login",
+  "author": "Elias Schneider",
+  "port": 1411,
+  "categories": [
+    "security"
+  ],
+  "description": "Pocket ID is a simple OpenID Connect provider that lets users sign in to self-hosted services with passkeys only. Pair it with a forward-auth proxy (e.g. Tinyauth) to protect apps without OIDC support.",
+  "tipi_version": 1,
+  "version": "2.19.3",
+  "source": "https://github.com/pocket-id/pocket-id",
+  "website": "https://pocket-id.org",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1794861876446,
+  "updated_at": 1794861876446,
+  "dynamic_config": true,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Encryption key",
+      "min": 32,
+      "required": true,
+      "env_variable": "POCKET_ID_ENCRYPTION_KEY"
+    }
+  ]
+}
