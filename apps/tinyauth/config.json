@@ -1,0 +1,55 @@
+{
+  "name": "Tinyauth",
+  "id": "tinyauth",
+  "available": true,
+  "short_desc": "The tiniest authentication and authorization server you have ever seen.",
+  "author": "steveiliop56",
+  "port": 8357,
+  "categories": [
+    "security"
+  ],
+  "description": "Tinyauth is a tiny authentication and authorization server for your self-hosted apps (forward auth for Traefik, Nginx, Caddy).\n\nFork of the official Runtipi app store definition without the built-in GitHub and Google providers: the official compose always declares them, even with empty credentials, which shows dead login buttons and, worse, Tinyauth skips OAuth group ACLs for these two providers. Add your own OIDC provider (e.g. Pocket ID) through TINYAUTH_OAUTH_PROVIDERS_<ID>_* variables in a user-config override.",
+  "tipi_version": 29,
+  "version": "v5.2.0",
+  "source": "https://github.com/tinyauthapp/tinyauth",
+  "website": "https://tinyauth.app",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1742119744755,
+  "updated_at": 1789117046821,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "App URL",
+      "hint": "The URL Tinyauth will use to redirect you to the login screen and back, this needs to match with the local domain or the expose domain, e.g. 'https://tinyauth.example.com'.",
+      "required": true,
+      "env_variable": "TINYAUTH_APP_URL"
+    },
+    {
+      "type": "text",
+      "label": "Users",
+      "hint": "A comma separated list of users in the format username:hash (bcrypt hash), make sure to use double dollar signs ($$) in the bcrypt hash to escape them.",
+      "required": true,
+      "env_variable": "TINYAUTH_USERS"
+    },
+    {
+      "type": "text",
+      "label": "OAuth Whitelist",
+      "hint": "A comma separated list of emails that are allowed to use the OAuth login, leave empty to allow all emails.",
+      "required": false,
+      "env_variable": "TINYAUTH_OAUTH_WHITELIST"
+    },
+    {
+      "type": "text",
+      "label": "Title",
+      "hint": "Set a custom title for the login screen, e.g. 'My Homelab'.",
+      "required": false,
+      "env_variable": "TINYAUTH_APP_TITLE"
+    }
+  ],
+  "min_tipi_version": "4.5.0"
+}
