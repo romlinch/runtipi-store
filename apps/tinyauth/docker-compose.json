@@ -5,24 +5,12 @@
       "image": "ghcr.io/tinyauthapp/tinyauth:v5.2.0",
       "internalPort": 3000,
       "isMain": true,
-      "environment": [
-        {
-          "key": "TINYAUTH_UI_TITLE",
-          "value": "${TINYAUTH_APP_TITLE}"
-        },
-        {
-          "key": "TINYAUTH_APPURL",
-          "value": "${TINYAUTH_APP_URL}"
-        },
-        {
-          "key": "TINYAUTH_AUTH_USERS",
-          "value": "${TINYAUTH_USERS}"
-        },
-        {
-          "key": "TINYAUTH_OAUTH_WHITELIST",
-          "value": "${TINYAUTH_OAUTH_WHITELIST}"
-        }
-      ],
+      "environment": {
+        "TINYAUTH_UI_TITLE": "${TINYAUTH_APP_TITLE}",
+        "TINYAUTH_APPURL": "${TINYAUTH_APP_URL}",
+        "TINYAUTH_AUTH_USERS": "${TINYAUTH_USERS}",
+        "TINYAUTH_OAUTH_WHITELIST": "${TINYAUTH_OAUTH_WHITELIST}"
+      },
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/data",
