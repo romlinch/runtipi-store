@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
-import { appInfoSchema, dynamicComposeSchema } from '@runtipi/common/schemas'
-import { fromError } from 'zod-validation-error';
+import { appInfoSchema, convertLegacyToYaml, dynamicComposeSchemaYaml } from '@runtipi/common/schemas'
+import { type } from 'arktype'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -46,14 +46,12 @@ describe("each app should have a valid config.json", async () => {
   for (const app of apps) {
     test(`app ${app} should have a valid config.json`, async () => {
       const fileContent = await getFile(app, 'config.json')
-      const parsed = appInfoSchema.omit({ urn: true }).safeParse(JSON.parse(fileContent || '{}'))
+      // Même validation que le backend runtipi (urn ajouté à l'installation)
+      const parsed = appInfoSchema.omit('urn')(JSON.parse(fileContent || '{}'))
 
-      if (!parsed.success) {
-        const validationError = fromError(parsed.error);
-        console.error(`Error parsing config.json for app ${app}:`, validationError.toString());
-      }
+      if (parsed instanceof type.errors) console.error(`config.json invalide pour ${app}:`, parsed.summary)
 
-      expect(parsed.success).toBe(true)
+      expect(parsed instanceof type.errors).toBe(false)
     })
   }
 })
@@ -64,14 +62,12 @@ describe("each app should have a valid docker-compose.json", async () => {
   for (const app of apps) {
     test(`app ${app} should have a valid docker-compose.json`, async () => {
       const fileContent = await getFile(app, 'docker-compose.json')
-      const parsed = dynamicComposeSchema.safeParse(JSON.parse(fileContent || '{}'))
+      // Même chaîne que le backend runtipi : conversion legacy → YAML puis validation
+      const parsed = dynamicComposeSchemaYaml(convertLegacyToYaml(JSON.parse(fileContent || '{}')))
 
-      if (!parsed.success) {
-        const validationError = fromError(parsed.error);
-        console.error(`Error parsing docker-compose.json for app ${app}:`, validationError.toString());
-      }
+      if (parsed instanceof type.errors) console.error(`docker-compose.json invalide pour ${app}:`, parsed.summary)
 
-      expect(parsed.success).toBe(true)
+      expect(parsed instanceof type.errors).toBe(false)
     })
   }
 });
