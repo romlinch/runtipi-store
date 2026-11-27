@@ -1,31 +1,68 @@
-# Example App Store Template
+# runtipi-store
 
-This repository serves as a template for creating your own custom app store for the Runtipi platform. Use this as a starting point to create and share your own collection of applications.
+Store [Runtipi](https://runtipi.io) personnel : des apps absentes du store officiel, ou adaptées (réglages, images, versions).
 
-## Repository Structure
+## Utiliser le store
 
-- **apps/**: Contains individual app directories
+Dans Runtipi : **Paramètres → App stores → Ajouter**, avec l'URL `https://github.com/romlinch/runtipi-store`.
+Les apps apparaissent ensuite dans le store, à côté des apps officielles.
 
-  - Each app has its own folder (e.g., `whoami/`) with the following structure:
-    - `config.json`: App configuration file
-    - `docker-compose.json`: Docker setup for the app
-    - `metadata/`: Contains app visuals and descriptions
-      - `description.md`: Markdown description of the app
-      - `logo.jpg`: App logo image
+## Apps
 
-- **tests/**: Contains test files for the app store
+| App | Description |
+|---|---|
+| `atelier-code` | Les enfants apprennent le JavaScript en codant leur propre jeu vidéo, guidés par un LLM |
+| `bichon` | Archiveur d'e-mails en Rust, avec interface web |
+| `calibre-web-automated` | Calibre-Web avec conversion, métadonnées et import automatiques |
+| `crawl4ai` | Crawler et scraper web pour LLM, API REST |
+| `crowdsec-web-ui` | Tableau de bord CrowdSec : alertes, décisions, métriques |
+| `degoog` | Métamoteur de recherche privé |
+| `frigate` | Enregistreur vidéo avec détection d'objets |
+| `immich-machine-learning` | Backend ML d'Immich seul, pour un serveur Immich distant |
+| `litellm` | Proxy LLM multi-fournisseurs avec API unifiée |
+| `llama-cpp` | Serveur LLM local (mode routeur, chargement à la demande) |
+| `music-assistant` | Bibliothèque musicale diffusée vers les enceintes connectées |
+| `pi-pocket` | Interface web mobile pour l'agent de code Pi |
+| `pocket-id` | Fournisseur OIDC à connexion par passkey |
+| `rssmonster` | Lecteur RSS auto-hébergé |
+| `shelfmark` | Recherche et demandes de livres et livres audio |
+| `stable-diffusion-cpp` | Génération d'images locale, API compatible OpenAI |
+| `tinyauth` | Serveur d'authentification minimal (forward auth) |
+| `transmission-gluetun` | Transmission derrière un tunnel VPN Gluetun |
+| `vector` | Envoie les logs des conteneurs Docker vers VictoriaLogs |
+| `veille` | Lecteur RSS qui regroupe les articles d'un même sujet |
+| `victoria-logs` | Base de logs avec recherche web, alimentée en syslog |
+| `wallos` | Suivi des abonnements |
 
-  - `apps.test.ts`: Test suite for validating apps
+## Structure d'une app
 
-## Getting Started
+```
+apps/<id>/
+├── config.json          # métadonnées, version, champs du formulaire (env_variable)
+├── docker-compose.json  # services, variables ${VAR} remplies par le formulaire
+└── metadata/
+    ├── description.md
+    └── logo.jpg
+```
 
-This repository is intended to serve as a template for creating your own app store. Follow these steps to get started:
+Le format est celui du [guide Runtipi](https://runtipi.io/docs/guides/create-your-own-app-store).
 
-1. Click the "Use this template" button to create a new repository based on this template
-2. Customize the apps or add your own app folders in the `apps/` directory
-3. Test your app store by using it with Runtipi
+## Développement
 
-## Documentation
+```sh
+bun install
+bun test                                            # valide toutes les apps contre les schémas Runtipi
+bun ./scripts/update-config.ts apps/<id>/config.json <version>   # version + tipi_version + updated_at
+```
 
-For detailed instructions on creating your own app store, please refer to the official guide:
-[Create Your Own App Store Guide](https://runtipi.io/docs/guides/create-your-own-app-store)
+## Mises à jour (Renovate)
+
+Renovate suit les tags d'image des `docker-compose.json` (et la release GitHub de `pi-pocket`),
+puis ouvre une PR par app ; `postUpgradeTasks` met à jour `config.json` et relance les tests.
+Les bases de données (postgres, redis…) sont exclues. Config : `renovate.json`.
+
+- Automatique : workflow `.github/workflows/renovate.yml`, tous les jours, avec le secret `RENOVATE_TOKEN`
+  (jeton fine-grained limité à ce dépôt). Les PR patch/minor sont fusionnées seules quand les tests passent ;
+  les majeures attendent une revue.
+- À la main : `./update.sh` (`DRY_RUN=full ./update.sh` pour simuler). Le jeton vient de `RENOVATE_TOKEN`,
+  d'un fichier sops local s'il existe, sinon de `gh auth token`.

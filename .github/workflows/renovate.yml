@@ -42,4 +42,9 @@ jobs:
         run: bun install -g renovate@40
 
       - name: Run renovate
-        run: LOG_LEVEL=${{ github.event.inputs.log_level || 'INFO' }} renovate --token ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
+        # Jeton fine-grained (pas GITHUB_TOKEN : lecture seule ici, et ses PR ne déclenchent pas les tests).
+        env:
+          RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          RENOVATE_ALLOWED_COMMANDS: '["^bun ./scripts/update-config.ts ", "^bun install && bun run test$"]'
+          LOG_LEVEL: ${{ github.event.inputs.log_level || 'INFO' }}
+        run: renovate ${{ github.repository }}

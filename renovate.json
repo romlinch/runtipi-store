@@ -39,10 +39,15 @@
     {
       "matchUpdateTypes": [
         "minor",
-        "major",
         "patch",
         "pin",
         "digest"
+      ],
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
       ],
       "automerge": false
     },
