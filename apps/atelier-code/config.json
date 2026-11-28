@@ -9,8 +9,8 @@
     "development"
   ],
   "description": "Atelier de code pour enfants dans le navigateur : missions qui construisent un jeu vidéo pas à pas, éditeur, aperçu du jeu, et Pixel, un assistant (Qwen via LiteLLM) qui voit le code et les erreurs. Projets enregistrés sur le serveur, un par enfant.",
-  "tipi_version": 3,
-  "version": "1.1.0",
+  "tipi_version": 4,
+  "version": "3.15",
   "source": "https://github.com/romlinch/runtipi-store/tree/main/apps/atelier-code",
   "exposable": true,
   "supported_architectures": [
@@ -18,7 +18,7 @@
     "amd64"
   ],
   "created_at": 1791708480758,
-  "updated_at": 1792945888685,
+  "updated_at": 1795858375620,
   "dynamic_config": true,
   "form_fields": [
     {
