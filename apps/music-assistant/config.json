@@ -9,8 +9,8 @@
     "media"
   ],
   "description": "Music Assistant connects your streaming services and local music library to a wide range of speakers (AirPlay, Chromecast, Sonos, DLNA, Squeezebox, Snapcast) and integrates with Home Assistant.",
-  "tipi_version": 2,
-  "version": "2.10.13",
+  "tipi_version": 3,
+  "version": "2.10.14",
   "source": "https://github.com/music-assistant/server",
   "exposable": true,
   "supported_architectures": [
@@ -18,7 +18,7 @@
     "amd64"
   ],
   "created_at": 1793044067629,
-  "updated_at": 1795794106777,
+  "updated_at": 1795858358922,
   "dynamic_config": true,
   "form_fields": []
 }
